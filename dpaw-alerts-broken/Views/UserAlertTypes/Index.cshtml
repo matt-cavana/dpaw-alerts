@@ -1,0 +1,91 @@
+﻿@model IEnumerable<dpaw_alerts.Models.UserAlertType>
+
+<p> </p>
+<div>
+    @if (Model.Count() == 0)
+    {
+        <div class="alert alert-warning">No alert has been added to this user.</div>
+    }
+    else
+    {
+        <table class="table table-bordered">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.alertType.Name)
+                </th>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.GrantDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.GrantedBy)
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.alertType.Name)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.GrantDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.GrantedBy)
+                    </td>
+                    <td>
+                        <div class="btn-group-xs">
+                            <input type="button" value="Delete" class="btn btn-danger delete" data-value="@item.Id" />
+                        </div>
+                    </td>
+                </tr>
+            }
+
+        </table>
+    }
+
+</div>
+<script>
+    $(".delete").click(function (e) {
+
+        if (confirm('Are you sure want to delete?')) {
+            e.preventDefault();
+            var parent = $(this).parent().parent().parent();
+
+            {
+
+                $.ajax({
+                    url: '@Url.Action("Delete", "UserAlertTypes")',
+                    type: 'POST',
+                    dataType: 'json',
+                    async: true,
+                    data: { 'id': $(this).attr('data-value') },
+                    contentType: 'application/x-www-form-urlencoded',
+                    beforeSend: function () {
+                        parent.animate({ 'backgroundColor': '#fb6c6c' }, 300);
+                    },
+                    success: function (data) {
+                        if (data.success) {
+
+                            $("#msg").html(data.message);
+
+                            parent.slideUp(300, function () {
+                                parent.remove();
+                            });
+
+                        }
+                        else {
+                            // show a message in a alert or div
+                            $("#msg").html(data.message);
+                        }
+                    }
+                });
+            }
+        }
+        else return false;
+    });
+
+</script>

@@ -1,0 +1,75 @@
+﻿@model IEnumerable<dpaw_alerts.Models.AlertFile>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+
+
+@if (Model.Count() == 0)
+{
+    <p></p>
+    <div class="alert alert-warning">No location has been added to this alert.</div>
+}
+else
+{
+
+<div class="panel">
+    <div class="panel-body">
+        <ul class="list-group task-list no-margin collapse in">
+            @foreach (var item in Model)
+            {
+                <li class='list-group-item'>
+                    <h3 class='@Html.DisplayFor(modelItem => item.FileType)'>
+                        @Html.DisplayFor(modelItem => item.FileTitle)  (@Html.DisplayFor(modelItem => item.FileSize))
+                        <a href='@Url.Content(item.FilePath)' title="Download file"> <i class="fa fa-download green"></i> </a>
+                        <a href="javascript:void();" title="Delete this record"><i class="fa fa-trash-o red deleteFile" data-value="@item.Id"></i> </a>
+                    </h3>
+                    
+                </li>
+            }
+        </ul>
+    </div>
+</div>
+}
+
+<script>
+    $(".deleteFile").click(function (e) {
+
+        if (confirm('Are you sure want to delete?')) {
+            e.preventDefault();
+            var parent = $(this).parent().parent().parent();
+
+            {
+
+                $.ajax({
+                    url: '@Url.Action("DeleteFile", "AlertFiles")',
+                    type: 'POST',
+                    dataType: 'json',
+                    async: true,
+                    data: { 'id': $(this).attr('data-value') },
+                    contentType: 'application/x-www-form-urlencoded',
+                    beforeSend: function () {
+                        parent.animate({ 'backgroundColor': '#fb6c6c' }, 300);
+                    },
+                    success: function (data) {
+                        if (data.success) {
+
+                            $("#msg").html(data.message);
+                            parent.slideUp(300, function () {
+                                parent.remove();
+                            });
+
+                        }
+                        else {
+                            // show a message in a alert or div
+                            $("#msg").html(data.message);
+                        }
+                    }
+                });
+            }
+        }
+        else return false;
+    });
+
+</script>

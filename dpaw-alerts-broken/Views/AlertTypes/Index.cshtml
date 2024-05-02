@@ -1,0 +1,201 @@
+﻿@model IEnumerable<dpaw_alerts.Models.AlertType>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<div id="breadcrumb">
+    <ul class="breadcrumb">
+        <li><i class="fa fa-home"></i><a href="~/Home"> Home</a></li>
+
+        <li class="active">Alert Types</li>
+    </ul>
+</div><!-- /breadcrumb-->
+<div class="main-header clearfix">
+    <div class="page-title">
+        <h3 class="no-margin">Alert Types</h3>
+        <span>List of alert types</span>
+    </div><!-- /page-title -->
+
+</div><!-- /main-header -->
+@using (Html.BeginForm("Create", null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="row padding-md">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3>  <a href="#addnew" role="button" data-toggle="modal" class="btn btn-info btn-sm park">  Add New </a>  </h3>
+
+            </div>
+
+            <div class="panel-body">
+                @if (TempData["Message"] != null)
+                {
+                    string msg = TempData["Message"].ToString();
+                    string st = "alert-success";
+                    if (msg.Contains("Error"))
+                    {
+                        st = "alert-danger";
+                    }
+                    <div class='alert @st' id="msg">
+                        <i class="glyphicon glyphicon-info-sign"></i>   @TempData["Message"]
+                    </div>
+                }
+
+                <div id="msg"> </div>
+
+                <table class="table-striped table-hover" id="dataTable">
+                    <thead>
+                        <tr>
+                            <th>##</th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Name)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Slug)
+                            </th>
+                            <th>Image</th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Description)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Status)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.CreateDate)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.CreatedBy)
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{int rowNo = 0;}
+                        @foreach (var item in Model)
+                    {
+                    <tr>
+                        <td> @(rowNo += 1)</td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Slug)
+                        </td>
+                        <td>
+                            @if (item.IconUrl != null)
+                                 {
+
+                                <img src="@Url.Content(item.IconUrl)" alt="@item.Name" class="img-rounded thumbnail" width="40" style="margin-bottom:0 !important" />
+
+                                }
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
+                        <td>
+                            @if(item.Status =="Inactive")
+                            {
+                                <i class="fa fa-circle red" title="Inactive"> </i>
+                            }
+                            else
+                            {
+                                <i class="fa fa-circle green" title="Active"> </i>
+                            }
+                            @Html.DisplayFor(modelItem => item.Status)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CreateDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CreatedBy)
+                        </td>
+                        <td>
+                            <div class="btn-group-xs">
+                                @Html.ActionLink("Edit", "Edit", new { id = item.AId }, new { @class = "btn btn-info" })
+
+                            </div>
+                        </td>
+                    </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!--Modal-->
+                            <div class="modal fade" id="addnew">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                            <h4>Add Alert Type</h4>
+                                        </div>
+                                        <div class="modal-body">
+
+
+                                            <div class="form-horizontal">
+                                                <div class="form-group">
+                                                    @Html.Label("Name:", new { @class = "control-label col-md-2" })
+                                                    <div class="col-md-10">
+
+                                                        @Html.TextBox("txtName", "", new { @class = "form-control", @required = "required" })
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    @Html.Label("Description", new { @class = "control-label col-md-2" })
+                                                    <div class="col-md-10">
+                                                        @Html.TextBox("txtDescription", "", new { @class = "form-control", @required = "required" })
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    @Html.Label("Icon", new { @class = "control-label col-md-2" })
+                                                    <div class="col-md-10">
+                                                        <div class="col-md-2">
+
+                                                            <input type="file" name="file" id="file" />
+                                                        </div>
+
+
+                                                    </div>
+                                                </div>
+
+
+
+                                            </div>
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <input type="submit" value="Submit" class="btn btn-info" id="btnNew" />  <button class="btn btn-sm btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
+
+                                        </div>
+                                    </div><!-- /.modal-content -->
+                                </div><!-- /.modal-dialog -->
+                            </div><!-- /.modal -->
+                            }
+<script>
+
+    $(function () {
+
+        $("#btnNew").click(function (e) {
+            var fuData = $('#file').val();
+            var nm = $("#txtName").val();
+            var des = $("#txtDescription").val();
+            if (nm.length == 0 || des.length == 0 || fuData.length == 0) {
+                alert("All fields require value");
+                e.preventDefault();
+                return false;
+            }
+            else
+                return;
+        });
+
+        //set the data table
+        $('#dataTable').dataTable({
+            "bJQueryUI": true,
+            "sPaginationType": "full_numbers",
+            "aoColumnDefs": [{ "bSortable": false, "aTargets": [8] }]
+        });
+    });
+
+
+</script>

@@ -1,0 +1,132 @@
+﻿@using dpaw_alerts.Services
+@model IEnumerable<dpaw_alerts.Models.Alert>
+@{
+    ViewBag.Title = "Parks and Wildlife Service - Department of Biodiversity, Conservation and Attractions";
+    Layout = "~/Views/Shared/_PublicLayout.cshtml";
+}
+<div id="container-public">
+    <div class="row padding-md">
+        <!--<div class="alert warning"> For emergency alerts visit: <a href="https://www.emergency.wa.gov.au" target="_blank" class="fa fa-external-link"> www.emergency.wa.gov.au <img class="emergency-logo" src="~/img/emergency-wa-app.png" /></a></div>-->
+        <div class="alert warning">
+            <div class="alert-content">
+                <span>For emergency alerts visit:</span>
+                <a href="https://www.emergency.wa.gov.au" target="_blank" class="alert-link">
+                    <span>www.emergency.wa.gov.au</span>
+                    <img class="emergency-logo" src="~/img/emergency-wa-app.png" />
+                </a>
+            </div>
+        </div>
+
+
+        <div id="msg"></div>
+        <div class="panel-tab clearfix">
+            <ul class="tab-bar tab-primary">
+                <li class="active"><a href="#mapview" data-toggle="tab" id="gmap"><i class="fa fa-map"></i> Map View</a></li>
+                <li><a href="#home" data-toggle="tab" id="listView"><i class="fa fa-list-alt"></i> List View</a></li>
+
+            </ul>
+        </div>
+
+        <div class="tab-content">
+            <div class="tab-pane fade  in active" id="mapview">
+
+                <br />
+
+                <div class="loadingOverlay">
+                    <div class="loading-spinner">
+                        <img src="~/img/loading.png" title="Loading" />
+                        <span class="loading-text">Loading...</span>
+                    </div>
+                </div>
+                <div id="mapView">
+                    <!-- This is the div that will contain the Map -->
+                    <div id="lmap"></div>
+
+                </div>
+
+            </div>
+            <div class="tab-pane fade" id="home">
+                <div class="panel panel-default">
+
+                    <div class="panel-body">
+
+                        <div id="msg"> </div>
+
+                        <div id="updatePanel">
+                            Please wait while loading...
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+    <div class="loadingOverlay hide" id="loading">
+        <div class="loading-spinner">
+            <img src="~/img/loading.png" title="Loading" />
+            <span class="loading-text">Loading...</span>
+        </div>
+    </div>
+</div>
+<!--Modal-->
+<div class="modal fade" id="alertDetails">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4>Alert Details</h4>
+            </div>
+            <div class="modal-body">
+                <div id="alertContent"><center> <img src="~/img/loading.png" /> <br />  Loading ... </center></div>
+                <div class="modal-footer">
+                    <div class="pull-left hidden" id="share-div">
+                        <a id="fb" href="#" target="_blank"> <i class="fa fa-facebook-square fa-2x facebook"></i> </a>
+                        <a id="twt" href="#" target="_blank"> <i class="fa fa-twitter-square fa-2x twitter"></i> </a>
+                        <a id="prnt" href="#" target="_blank"> <i class="fa fa-print fa-2x gray"></i> </a>
+
+                    </div>
+                    <button class="btn btn-sm btn-success" data-dismiss="modal" aria-hidden="true">Close</button>
+
+                </div><!-- /.modal-footer -->
+            </div><!-- /.modal-body -->
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!--Modal-->
+<div class="modal fade" id="siteInfo">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4>Site Information</h4>
+            </div>
+            <div class="modal-body">
+                <div id="siteContent"><center> <img src="~/img/loading.png" /> <br /> Loading ... </center></div>
+                <div class="modal-footer">
+                    <button class="btn btn-sm btn-success" data-dismiss="modal" aria-hidden="true">Close</button>
+
+                </div><!-- /.modal-footer -->
+            </div><!-- /.modal-body -->
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!--[if !IE]><!-->
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/bluebird/3.3.5/bluebird.min.js"></script>-->
+<!--<![endif]-->
+<!--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDaJlkDXFC39cH9PQo7j3C9RmUAFkXAEQY" async defer></script>-->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet-easybutton@2.0.0/src/easy-button.css">
+<script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.fullscreen/3.0.1/Control.FullScreen.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.fullscreen/3.0.1/Control.FullScreen.min.js"></script>
+
+
+<!-- Mapbox GL JS -->
+<script src='https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js'></script>
+<link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css' />
+
+@Scripts.Render("~/bundles/public")

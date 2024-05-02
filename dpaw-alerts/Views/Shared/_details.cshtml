@@ -1,0 +1,93 @@
+﻿@model dpaw_alerts.Models.Location
+
+<div>
+    <h3> @Model.Name</h3>
+    <dl class="dl-horizontal left">
+        
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+               
+        <dt>
+            @Html.DisplayNameFor(model => model.Longitude)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Longitude)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Latitude)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Latitude)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Contact)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Contact)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+       
+    </dl>
+    </div>
+<h3>Map</h3>
+<div id="locationmap" style="max-width:560px; height: 300px"> <center> <img src="~/img/loading.png" /> <br /> Loading ... </center></div>
+
+<script type="text/javascript">
+    $(function()
+    {
+        mapboxgl.accessToken = 'pk.eyJ1IjoiZHBhd2FzaSIsImEiOiJjamxmeHM5OGswdnA2M3FydmJ2YW9xa2Z6In0.wAnkinx2kKEZLxU1vzvyIw';
+        var map = new mapboxgl.Map({
+            container: 'locationmap',
+            style: 'mapbox://styles/mapbox/streets-v12', // or any other style you prefer
+            center: [@Model.Longitude, @Model.Latitude], 
+            zoom: 6
+        });
+
+        $(".loadingOverlay").show();
+        var uri = appUrl + ('@Model.alert.alertType.IconUrl').replace("~", "");
+        
+        map.on('load', function() {
+            map.loadImage(uri, function(error, image) {
+                if (error) throw error;
+                map.addImage('custom-marker', image);
+                map.addSource('point', {
+                    'type': 'geojson',
+                    'data': {
+                        'type': 'Feature',
+                        'geometry': {
+                            'type': 'Point',
+                            'coordinates': [@Model.Longitude, @Model.Latitude]
+                        }
+                    }
+                });
+                map.addLayer({
+                    'id': 'points',
+                    'type': 'symbol',
+                    'source': 'point',
+                    'layout': {
+                        'icon-image': 'custom-marker',
+                        'icon-size': 0.5
+                    }
+                });
+            });
+        });
+    });
+</script>
+

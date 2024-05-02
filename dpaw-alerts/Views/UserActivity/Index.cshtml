@@ -1,0 +1,90 @@
+﻿@model IEnumerable<dpaw_alerts.Models.UserActivity>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<div id="breadcrumb">
+    <ul class="breadcrumb">
+        <li><i class="fa fa-home"></i><a href="~/Home/"> Home</a></li>
+        <li class="active">User Activities</li>
+    </ul>
+</div><!-- /breadcrumb-->
+<div class="main-header clearfix">
+    <div class="page-title">
+        <h3 class="no-margin">User Activities</h3>
+        
+    </div><!-- /page-title -->
+
+
+</div><!-- /main-header -->
+<div class="row padding-md">
+    <table class="table table-striped table-hover" id="dataTable">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Id)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ActionDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.UserName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Action)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Message)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.MetaData)
+                </th>
+
+
+            </tr>
+        </thead>
+        <tbody>
+            @{int rowNo = 0;}
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@(rowNo += 1)</td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ActionDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UserName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Action)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Message)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MetaData)
+                    </td>
+
+
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script>
+
+    $(function () {
+
+        //set the data table
+        $('#dataTable').dataTable({
+            // "bSort" : false,
+            "bJQueryUI": true,
+            "sPaginationType": "full_numbers",
+            "aaSorting": [[0, "asc"]]
+
+        });
+
+    });
+</script>

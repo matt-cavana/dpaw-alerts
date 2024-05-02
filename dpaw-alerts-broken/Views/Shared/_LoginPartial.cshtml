@@ -1,0 +1,63 @@
+﻿@using Microsoft.AspNet.Identity
+@using System.Security.Claims
+@using System;
+@using System.Collections.Generic;
+@using System.Linq;
+@using System.Web;
+@using System.Web.Mvc;
+@using dpaw_alerts.Models;
+@using Microsoft.AspNet.Identity.Owin;
+
+<button type="button" class="navbar-toggle pull-left" id="sidebarToggle">
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+</button>
+<div class="site-title">
+    <div class="col-md-7">
+        Park Alerts System <span class="hidden-sm hidden-xs hidden-md"> - Department of Biodiversity, Conservation and Attractions</span>
+    </div>
+    <div class="col-md-2 pull-right">
+        @if (Request.IsAuthenticated)
+        {
+
+            var identity = (ClaimsIdentity)User.Identity;
+            var name = identity.FindFirstValue(ClaimTypes.GivenName) ?? identity.GetUserName();
+
+            //get the user pin number
+            var manager = Request.GetOwinContext().GetUserManager<ApplicationUserManager>
+                ();
+            var user = manager.FindById(User.Identity.GetUserId());
+            string lastName = user.LastName;
+
+           
+                <ul class="nav-notification clearfix">
+
+                    <li class="profile dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="blank.html#">
+                            <strong><i class="fa fa-user"></i><span class="hidden-sm hidden-md hidden-xs">  Welcome back,  @user.FirstName </span> @lastName! </strong>
+                            <span><i class="fa fa-chevron-down"></i></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a class="clearfix" href="blank.html#">
+
+                                    <div class="detail">
+                                        <strong>@user.FirstName  @lastName</strong>
+                                        <p class="grey">@name</p>
+                                    </div>
+                                </a>
+                            </li>
+                            <li><a tabindex="-1" href='@Url.Action("UserProfile","Account")' class="main-link"><i class="fa fa-edit fa-lg"></i> View profile</a></li>
+
+                            <li class="divider"></li>
+                            <li><a tabindex="-1" class="main-link logoutConfirm_open" href="#logoutConfirm"><i class="fa fa-lock fa-lg"></i> Log out</a></li>
+
+                        </ul>
+                    </li>
+                </ul>
+
+        }
+    </div>
+
+</div>

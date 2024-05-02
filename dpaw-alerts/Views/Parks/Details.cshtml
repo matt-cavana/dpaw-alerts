@@ -1,0 +1,111 @@
+﻿@model dpaw_alerts.Models.Park
+
+<div>
+   <h3> @Model.Name</h3>
+    <dl class="dl-horizontal left">
+        <dt>
+            @Html.DisplayNameFor(model => model.RPrkId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RPrkId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Region)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Region)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.District)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.District)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Tenure)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Tenure)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Longitude)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Longitude)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Latitude)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Latitude)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Status)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Status)
+        </dd>
+        <dt>
+            Author
+        </dt>
+        <dd>
+         <i class="fa fa-user"></i>   @Html.DisplayFor(model => model.CreatedBy) <i class="fa fa-calendar"></i>   @Html.DisplayFor(model => model.CreateDate)
+        </dd>
+
+
+    </dl>
+    <h3>Contact Information</h3>
+    <dl class="dl-horizontal left">
+        <dt>
+            @Html.DisplayNameFor(model => model.Contact.OfficeName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Contact.OfficeName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Contact.Phone)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Contact.Phone)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Contact.Email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Contact.Email)
+        </dd>
+    </dl>
+</div>
+

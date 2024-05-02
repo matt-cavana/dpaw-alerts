@@ -1,0 +1,57 @@
+﻿
+
+@using dpaw_alerts.Services;
+@model IEnumerable<dpaw_alerts.ViewModels.EmergencyRSS>
+
+<table class="table table-bordered" id="RssDataTable">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Publish Date</th>
+            <th>Title</th>
+            <th>Link</th>
+            <th>Description</th>
+            <th>Latitude</th>
+            <th>Longitude</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{int rowNo = 0;}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@(rowNo += 1)</td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.pubDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.title)
+                </td>
+                <td>
+                    <a href="@item.link" class="blue" target="_blank">   @Html.DisplayFor(modelItem => item.link) <i class="fa fa-external-link"></i></a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.latitude)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.longitude)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+    $(function () {
+        $('#RssDataTable').dataTable({
+            // "bSort" : false,
+            "bJQueryUI": true,
+            "sPaginationType": "full_numbers",
+            "aaSorting": [[0, "asc"]]
+
+        });
+    });
+</script>

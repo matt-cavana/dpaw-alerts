@@ -1,0 +1,43 @@
+﻿@using dpaw_alerts.Models
+@using Jmelosegui.Mvc.GoogleMap
+@model IEnumerable<Park>
+@{
+    ViewBag.Title = "Binding To Model";
+}
+@{
+    Html.GoogleMap()
+        .Name("map")
+        .Height(600)
+        .ApiKey("AIzaSyDaJlkDXFC39cH9PQo7j3C9RmUAFkXAEQY")
+        .Zoom(5)
+        .Center(c => c.Latitude(-9.2).Longitude(100.8))
+        .BindTo<Park, Marker>
+        (Model, mappings => mappings.For<Park>
+            (
+                binding => binding.ItemDataBound
+                    (
+                        (marker, park) =>
+                        {
+                            marker.Latitude = Convert.ToDouble(park.Latitude);
+                            marker.Longitude = Convert.ToDouble(park.Longitude);
+                            marker.Title = park.Name;
+                            marker.ZIndex = 3; // park.RPrkId;
+                                               /* marker.Icon = new MarkerImage(String.Format("~/Images/flags/{0}", regionInfo.ImagePath)
+                                                    , new Size(18, 12)
+                                                    , new Point(0, 0)
+                                                    , new Point(0, 12)); */
+                            marker.Window = new InfoWindow(marker)
+                            {
+                                Template =
+                                {
+                                    Content = () => ViewContext.Writer.Write(park.Name)//, 
+                                    //Html =("<h2>@park.Name</h2><p>Visit here for details <a href='#'>fdsfsd</p>")
+
+                                }
+                            };
+                        }
+                    )
+            )
+        ).Render();
+}
+

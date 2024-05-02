@@ -1,0 +1,204 @@
+﻿@model IEnumerable<dpaw_alerts.Models.ScheduleJob>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<div id="breadcrumb">
+    <ul class="breadcrumb">
+        <li><i class="fa fa-home"></i><a href="~/Home/"> Home</a></li>
+        <li class="active">Schedule Jobs</li>
+    </ul>
+</div><!-- /breadcrumb-->
+<div class="main-header clearfix">
+    <div class="page-title">
+        <h3 class="no-margin">Scheduled Jobs List</h3>
+       
+    </div><!-- /page-title -->
+    
+</div><!-- /main-header -->
+<div class="row padding-md">
+    
+    <div id="msg"></div>
+
+    <table class="table table-bordered" id="dataTable">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Id)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.alert.Title)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Channel)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ExecutionDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Status)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CompletedDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Response)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CreateDate)
+                </th>
+                <th>*</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{int rowNo = 0;}
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                      @(rowNo+=1)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.alert.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Channel)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ExecutionDate)
+                    </td>
+                    <td>
+                        @if (item.Status == "Complete")
+                        {
+                            <span class="green">   @Html.DisplayFor(modelItem => item.Status)</span>
+                        }
+                        else
+                        {
+                            <span class="red">   @Html.DisplayFor(modelItem => item.Status)</span>
+                        }
+
+
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CompletedDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Response)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CreateDate)
+                    </td>
+                    <td>
+                        <div class="form-inline">
+                            @if (User.IsInRole("Admin"))
+                            {
+                                if (item.Status == "Pending")
+                                {
+                                    <a href="@Url.Action("Edit","ScheduleJobs")" class="exec" data-value="@item.AlertId" ><i class="fa fa-bolt blue"></i></a>
+
+                                }
+                                @*<a href="@Url.Action("Edit","ScheduleJobs", new { id=item.Id})"><i class="fa fa-pencil-square-o blue"></i></a>*@
+                                <a href="@Url.Action("Delete","ScheduleJobs", new { id=item.Id})" data-value="@item.Id" class="delete"><i class="fa fa-trash-o red"></i> </a>
+                            }
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+</div>
+<script>
+
+    $(function () {
+
+        $(".delete").click(function (e) {
+
+            if (confirm('Are you sure want to delete?')) {
+                e.preventDefault();
+                var parent = $(this).parent().parent();
+
+                {
+
+                    $.ajax({
+                        url: '@Url.Action("Delete", "ScheduleJobs")',
+                        type: 'POST',
+                        dataType: 'json',
+                        async: true,
+                        data: { 'id': $(this).attr('data-value') },
+                        contentType: 'application/x-www-form-urlencoded',
+                        beforeSend: function () {
+                            parent.animate({ 'backgroundColor': '#fb6c6c' }, 300);
+                        },
+                        success: function (data) {
+                            if (data.success) {
+
+                                $("#msg").html("<div class='alert alert-success'>The record has been deleted from the system! </div>");
+
+                                parent.slideUp(300, function () {
+                                    parent.remove();
+                                });
+
+                            }
+                            else {
+                                // show a message in a alert or div
+                                $("#msg").html("<div class='alert alert-danger'>Sorry, the record cannot be deleted! </div>");
+                            }
+                        }
+                    });
+                }
+            }
+            else return false;
+        });
+
+        $(".exec").click(function (e) {
+
+            if (confirm('Are you sure want to execute this job now?')) {
+                e.preventDefault();
+                var parent = $(this).parent().parent();
+
+                {
+
+                    $.ajax({
+                        url: '@Url.Action("ExecuteJob", "ScheduleJobs")',
+                        type: 'POST',
+                        dataType: 'json',
+                        async: true,
+                        data: { 'aid': $(this).attr('data-value') },
+                        contentType: 'application/x-www-form-urlencoded',
+                        beforeSend: function () {
+                            parent.animate({ 'backgroundColor': '#fb6c6c' }, 6000);
+                        },
+                        success: function (data) {
+                            if (data.success) {
+
+                                $("#msg").html("<div class='alert alert-success'>" + data.message + " </div>").fadeOut(4000);
+                                $(this).fadeOut(6000);
+
+                            }
+                            else if(!data.success) {
+                                // show a message in a alert or div
+                                $("#msg").html("<div class='alert alert-danger'>" + data.message + "</div>");
+                            }
+                        }
+                    });
+                }
+            }
+            else return false;
+        });
+
+
+        //set the data table
+        $('#dataTable').dataTable({
+            "bJQueryUI": true,
+            "sPaginationType": "full_numbers",
+            "aoColumnDefs": [{ "bSortable": false, "aTargets": [8] }]
+        });
+    });
+
+
+</script>
+

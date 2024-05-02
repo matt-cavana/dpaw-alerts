@@ -1,0 +1,84 @@
+﻿@model IEnumerable<dpaw_alerts.Models.SocialNetwork>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<div id="breadcrumb">
+    <ul class="breadcrumb">
+        <li><i class="fa fa-home"></i><a href="~/Home"> Home</a></li>
+
+        <li class="active">API Integration</li>
+    </ul>
+</div><!-- /breadcrumb-->
+<div class="main-header clearfix">
+    <div class="page-title">
+        <h3 class="no-margin">Social Networks Integration</h3>
+
+    </div><!-- /page-title -->
+
+</div><!-- /main-header -->
+<div class="row padding-md">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3>   &nbsp;  @Html.ActionLink("Add New", "Create", null, new { @class = "btn btn-sm btn-info" })  &nbsp;  @Html.ActionLink("Facebook Auth", "FacebookAuth", null, new { @class = "btn btn-sm btn-success" }) &nbsp; <a href="~/glimpse.axd" class = "btn btn-sm btn-warning" target="_blank"><i class="fa fa-cog" ></i> Turn On Glimpse</a></h3>
+
+        </div>
+
+        <div class="panel-body">
+            @if (TempData["fbmsg"] != null)
+            {
+                <div class="alert alert-warning">
+                    @TempData["fbmsg"]
+                </div>
+            }
+
+            <div id="msg"> </div>
+
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Channel)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.AppId)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.AppSecret)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ExpiryDate)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Channel)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.AppId)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.AppSecret)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ExpiryDate)
+                            </td>
+                            <td>
+                                @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-primary" })
+
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+</div>

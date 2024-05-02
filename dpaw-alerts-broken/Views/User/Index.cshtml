@@ -1,0 +1,179 @@
+﻿@model IEnumerable<dpaw_alerts.Models.ApplicationUser>
+
+@{
+    ViewBag.Title = "Index";
+
+}
+
+<div id="breadcrumb">
+    <ul class="breadcrumb">
+        <li><i class="fa fa-home"></i><a href="~/Home"> Home</a></li>
+
+        <li class="active">System Users</li>
+    </ul>
+</div><!-- /breadcrumb-->
+<div class="main-header clearfix">
+    <div class="page-title">
+        <h3 class="no-margin">Users List</h3>
+        <span>Displaying system users</span>
+    </div><!-- /page-title -->
+
+</div><!-- /main-header -->
+
+<div id="msg">@ViewBag.StatusMessage</div>
+
+@AntiForgery.GetHtml()
+<div class="panel panel-default table-responsive">
+    <div class="panel-heading">
+        <a class="btn btn-success " href="~/User/Create"><i class="fa fa-plus fa-lg"></i> Add User</a>
+         <span class="label label-info pull-right">@Model.Count() records</span>
+    </div>
+    <div class="padding-md clearfix">
+
+       
+        <table class="table table-striped table-hover" id="dataTable">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>UserId</th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.FirstName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.LastName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.UserName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Email)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.PhoneNumber)
+                    </th>
+                    
+                    <th>
+                        Role
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @{int rowNo=0;}
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@(rowNo += 1)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Id)</td>
+                        <td>@Html.DisplayFor(modelItem => item.FirstName)</td>
+                        <td>@Html.DisplayFor(modelItem => item.LastName)</td>
+                        <td>
+                          <i class="fa fa-user-md yellow"></i>  @Html.DisplayFor(modelItem => item.UserName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Email)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PhoneNumber)
+                        </td>
+                       
+                        <td>
+                            @Html.Action("GetRolesForUser", "User", new { userId = item.UserName })
+                        </td>
+                        <td>
+                            <div class="btn-group-xs">
+                                @Html.ActionLink("Edit", "Edit", new { username = item.UserName, id=item.Id }, new { @class = "btn btn-sm btn-success" })
+                                <input type="button" value="Delete User" class="btn btn-danger delete" data-value="@item.UserName" />
+                                
+
+                            </div>
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div><!-- /.padding-md -->
+</div><!-- /panel -->
+<script>
+    $(function () {
+
+        //load delete function
+        delRecord();
+
+			$('#dataTable').dataTable( {
+				"bJQueryUI": true,
+				"sPaginationType": "full_numbers",
+				"aoColumnDefs": [
+                                        { "bSortable": false, "aTargets": [8] }
+                ],
+                drawCallback: function () {
+                    var api = this.api();
+                    api.$('#someBtnId').click(function () {
+                        // do some click handler stuff
+                        delRecord();
+                    });
+                }
+			});
+            /*
+			$('#chk-all').click(function()	{
+				if($(this).is(':checked'))	{
+					$('#responsiveTable').find('.chk-row').each(function()	{
+						$(this).prop('checked', true);
+						$(this).parent().parent().parent().addClass('selected');
+					});
+				}
+				else	{
+					$('#responsiveTable').find('.chk-row').each(function()	{
+						$(this).prop('checked' , false);
+						$(this).parent().parent().parent().removeClass('selected');
+					});
+				}
+			});
+            */
+
+            function delRecord() {
+
+            $('td>div>input.delete').on('click', this, function (e) {
+			   
+			    if(confirm('Are you sure want to delete?')){ 
+			        e.preventDefault();
+			        var parent = $(this).parent().parent().parent();
+			        
+			    {
+                   
+			        $.ajax({
+			            url: '@Url.Action("AjaxDelete", "User")',
+			            type: 'POST',
+			            dataType: 'json',
+			            async: true,
+			            data: { 'userName': $(this).attr('data-value') },
+			            contentType: 'application/x-www-form-urlencoded',
+			            beforeSend: function () {
+			                parent.animate({ 'backgroundColor': '#fb6c6c' }, 300);
+			            },
+			            success: function (data) {
+			                if (data.success) {
+			                   
+			                    $("#msg").html("<div class='alert alert-success'>The user has been deleted from the system! </div>");
+			                   
+			                    parent.slideUp(300, function () {
+			                        parent.remove();
+			                    });
+			                        
+			                }
+			                else {
+			                    // show a message in a alert or div
+			                    $("#msg").html("<div class='alert alert-danger'>Sorry, the user cannot be deleted! </div>");
+			                }
+			            }
+			        });
+			    }
+			    }
+			    else return false;
+                });
+
+            }
+		});
+</script>

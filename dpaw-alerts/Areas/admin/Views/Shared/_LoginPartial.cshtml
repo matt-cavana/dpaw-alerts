@@ -1,0 +1,49 @@
+﻿@using Microsoft.AspNet.Identity
+@* @if (Request.IsAuthenticated) *@
+@if (HttpContext.Current.User.Identity.IsAuthenticated)
+{
+    using (Html.BeginForm("LogOut", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+    {
+    @Html.AntiForgeryToken()
+        <ul class="nav-notification clearfix">
+
+            <li class="profile dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="blank.html#">
+                    <strong>@this.Session["username"]</strong>
+                    <span><i class="fa fa-chevron-down"></i></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li>
+                       <a class="clearfix" href="blank.html#">
+                           
+                            <div class="detail">
+                                <strong>@this.Session["fullname"]</strong>
+                                <p class="grey">@this.Session["email"]</p>
+                            </div>
+                        </a>
+                    </li>
+                    <li><a tabindex="-1" href="profile.html" class="main-link"><i class="fa fa-edit fa-lg"></i> Edit profile</a></li>
+                    <li><a tabindex="-1" href="gallery.html" class="main-link"><i class="fa fa-picture-o fa-lg"></i> Photo Gallery</a></li>
+                    <li><a tabindex="-1" href="blank.html#" class="theme-setting"><i class="fa fa-cog fa-lg"></i> Setting</a></li>
+                    <li class="divider"></li>
+                    <li><a tabindex="-1" class="main-link logoutConfirm_open" href="blank.html#logoutConfirm"><i class="fa fa-lock fa-lg"></i> Log out</a></li>
+                    
+                </ul>
+            </li>
+        </ul>
+    <ul class="nav navbar-nav navbar-right">
+        <li>
+         <a href="javascript:void();">  Hello @this.Session["fullname"] ! </a>
+        </li>
+        
+    </ul>
+    }
+}
+else
+{
+    <ul class="nav-notification clearfix">
+        <li>@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+        <li>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+    </ul>
+}
+

@@ -1,0 +1,74 @@
+﻿@model IEnumerable<dpaw_alerts.Models.EmailTemplate>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<div id="breadcrumb">
+    <ul class="breadcrumb">
+        <li><i class="fa fa-home"></i><a href="~/Home"> Home</a></li>
+        <li><a href="~/Subscribers"> Subscribers</a></li>
+        <li class="active">Email Templates</li>
+    </ul>
+</div><!-- /breadcrumb-->
+<div class="main-header clearfix">
+    <div class="page-title">
+        <h3 class="no-margin">Email templates</h3>
+
+    </div><!-- /page-title -->
+
+</div><!-- /main-header -->
+
+<p>
+This template only apply for the Tour operators.
+</p>
+
+<table class="table table-condensed" >
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.From)
+        </th>
+      
+        <th>
+            @Html.DisplayNameFor(model => model.HeaderSection)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FooterSection)
+        </th>
+        
+        <th>
+           Author
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.From)
+        </td>
+       
+        <td>
+            @Html.Raw(item.HeaderSection)
+        </td>
+        <td>
+            @Html.Raw(item.FooterSection)
+        </td>
+       
+        <td width="250">
+            <i class="fa fa-user purple"></i>
+            @Html.DisplayFor(modelItem => item.CreatedBy)
+            <i class="fa fa-calendar-check-o green"></i>     @Html.DisplayFor(modelItem => item.CreateDate) <br />
+            <i class="fa fa-user blue"></i>
+            @Html.DisplayFor(modelItem => item.UpdatedBy)
+            <i class="fa fa-calendar-check-o"></i>     @Html.DisplayFor(modelItem => item.UpdateDate)
+        </td>
+        <td>
+            <a href='@Url.Action("Edit",new { id=item.Id })'><i class="fa fa-edit fa-2x green"></i></a>
+            <a href='@Url.Action("Delete",new { id=item.Id })'><i class="fa fa-trash fa-2x red"></i></a>
+           
+        </td>
+    </tr>
+}
+
+</table>

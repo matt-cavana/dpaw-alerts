@@ -1,0 +1,142 @@
+﻿@model dpaw_alerts.Models.Alert
+
+<html xmlns:datetime="http://exslt.org/dates-and-times">
+<head>
+    <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Alert Details</title>
+    <meta content="no-cache" http-equiv="Pragma">
+    <meta content="no-cache" http-equiv="Cache-Control">
+    <meta content="150" http-equiv="Expires">
+    <meta name="DC.Date.Modified" scheme="ISO8601" content="01/08/2017 10:24:53">
+    <meta property="og:url" content="https://ratisweb.dpaw.wa.gov.au/alerts/Home/Index#@Model.AlertId">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Department of Biodiversity, Conservation and Attractions">
+    <meta property="og:title" content="@Model.Title">
+    <meta property="og:description" content="Durack">
+    <meta property="og:image" content="https://ratisweb.dpaw.wa.gov.au/alerts/img/parks-wildlife-service.png">
+    <meta content="summary" name="twitter:card">
+    <meta content="&#64;alerts" name="twitter:site">
+    <meta content="Alert" name="twitter:title">
+    <meta name="twitter:url" content="https://ratisweb.dpaw.wa.gov.au/alerts/Home/Index#@Model.AlertId">
+    <meta name="twitter:description" content="@Model.Title">
+    <meta name="twitter:image" content="https://ratisweb.dpaw.wa.gov.au/alerts/img/parks-wildlife-service.png">
+    <link rel="stylesheet" href="~/Content/bootstrap.min.css">
+    <link rel="stylesheet" href="~/Content/app-skin.css">
+</head>
+<body>
+   
+   <div id="main-wrapper">
+       <h3> @Model.Title</h3>
+       <div>
+           <p>
+               <strong>
+                   @Html.DisplayNameFor(model => model.alertType.Name):
+               </strong>
+
+               <span>
+                   @Html.DisplayFor(model => model.alertType.Name)
+               </span>
+           </p>
+
+           <p>
+               <strong>
+                   @Html.DisplayNameFor(model => model.Description):
+               </strong>
+               <br />
+               <div>
+                   @Html.Raw(Model.Description)
+               </div>
+           </p>
+           <p>
+               <strong>
+                   @Html.DisplayNameFor(model => model.StartDate):
+               </strong>
+
+               <span>
+                   @Html.DisplayFor(model => model.StartDate)
+               </span>
+           </p>
+           <p>
+
+               <strong>
+                   @Html.DisplayNameFor(model => model.SitesAffected):
+               </strong>
+
+               <span>
+                   @Html.DisplayFor(model => model.SitesAffected)
+               </span>
+           </p>
+           <p>
+               <strong>
+                   @Html.DisplayNameFor(model => model.WebLink):
+               </strong>
+
+               <span>
+                   @Html.DisplayFor(model => model.WebLink)
+               </span>
+           </p>
+           <h3 class="page-header">Parks and Locations </h3>
+           <ul class="list-unstyled">
+
+               @foreach (var location in Model.Location)
+            {
+                   <li>
+
+                       <strong>  @Html.DisplayFor(locItem => location.Name) </strong>- Tel: @Html.DisplayFor(locItem => location.Contact), Email: @Html.DisplayFor(locItem => location.Email)
+
+                   </li>
+               }
+           </ul>
+
+
+           <h3 class="page-header">Files</h3>
+           @if (Model.Files.Count() > 0)
+           {
+
+
+               <ul class="list-unstyled">
+                   @foreach (var file in Model.Files)
+                {
+                       <li>
+                           <a class='@Html.DisplayFor(modelItem => file.FileType)' href='@Url.Content(file.FilePath)' title="Download file" target="_blank">
+                               @Html.DisplayFor(modelItem => file.FileTitle)  (@Html.DisplayFor(modelItem => file.FileSize)) <i class="fa fa-download"></i>
+                           </a>
+                       </li>
+                   }
+               </ul>
+           }
+           else
+           {
+               <div class="alert alert-info">No attachment found.</div>
+           }
+
+           <p>
+               <small>
+                  
+                   <strong>
+                       @Html.DisplayNameFor(model => model.UpdateDate):
+                   </strong>
+
+                   <span>
+                       @Html.DisplayFor(model => model.UpdateDate)
+                   </span>
+               </small>
+           </p>
+
+
+       </div>
+    </div>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #main-wrapper {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+    </style>
+</body>
+</html>
+

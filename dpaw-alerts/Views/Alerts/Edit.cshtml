@@ -1,0 +1,314 @@
+﻿@using dpaw_alerts.Helpers
+@model dpaw_alerts.Models.Alert
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<div id="breadcrumb">
+    <ul class="breadcrumb">
+        <li><i class="fa fa-home"></i><a href="~/Home"> Home</a></li>
+
+        <li class="active">Alert details</li>
+    </ul>
+</div><!-- /breadcrumb-->
+<div class="main-header clearfix">
+    <div class="page-title">
+        <h3 class="no-margin">Alert details</h3>
+        <span>
+            Please make sure you update the information in this screen or delete this alert if you don't want to proceed.
+
+        </span>
+    </div><!-- /page-title -->
+
+</div><!-- /main-header -->
+
+@using (Html.BeginForm())
+{
+    <div class="grey-container shortcut-wrapper sticky" style="text-align: right;">
+
+        @Html.ActionLink("Cancel", "Index", "Home", null, new { @class = "btn btn-primary" })
+        @if (Model.Published == "No")
+        {
+            @Html.ActionLink("Delete", "DeleteInline", new { id = Model.AlertId }, new { @class = "btn btn-danger", @OnClientClick = "return confirm('This will permanently delete this record. Are you sure you want to do this?');" })
+        }
+        <input type="submit" value="Save" class="btn btn-info" name="Edit" />
+        @if (Model.Published == "No")
+        {
+            <input type="submit" id="btnPublish" value="Publish" name="Publish" data-value='@Model.AlertId' class="btn btn-success" />
+        }
+
+    </div><!-- /grey-container -->
+    @Html.AntiForgeryToken()
+    <div class="row padding-md">
+        <p></p>
+        <div id="msg">
+            @if (TempData["Message"] != null)
+            {
+                <div class="alert alert-success clearfix">
+                    <i class="glyphicon glyphicon-info-sign"></i>   @TempData["Message"]
+                </div>
+            }
+        </div>
+
+        <br />
+        <div class="panel-tab  clearfix">
+            <ul class="tab-bar tab-info">
+                <li class="active"><a href="#home1" data-toggle="tab"><i class="fa fa-desktop"></i> General Information</a></li>
+                <li><a href="#park" data-toggle="tab"><i class="fa fa-leaf"></i> Parks/Locations</a></li>
+
+                <li><a href="#files" data-toggle="tab"><i class="fa fa-file-pdf-o"></i> Files</a></li>
+            </ul>
+        </div>
+
+        <div class="tab-content">
+            <div class="tab-pane fade in active" id="home1">
+
+                <div class="form-horizontal col-md-8 clearfix">
+                    <p> &nbsp;</p>
+                    <div> @Html.ValidationSummary(false, "Errors", new { @class = "alert alert-danger list-unstyled" }) </div>
+                    @Html.HiddenFor(model => model.AlertId)
+                    @Html.HiddenFor(model => model.Published)
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.StartDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="form-inline">
+                            <div class="col-md-4 check-control">
+
+                                @Html.EditorFor(model => model.StartDate, new { htmlAttributes = new { @class = "form-control", @placeholder = "Start Date" } })
+                                <label class="label-checkbox">
+                                    @Html.CheckBoxFor(model => model.PubImmediately)
+
+                                    <span class="custom-checkbox"></span>
+                                    Start immediately<br>
+                                </label>
+
+                                @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })
+                            </div>
+
+                        </div>
+                        @Html.LabelFor(model => model.EndDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-3">
+                            @Html.EditorFor(model => model.EndDate, new { htmlAttributes = new { @class = "form-control", @placeholder = "End Date" } })
+                            @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.AId, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+
+                            @Html.ValidationMessageFor(model => model.AId, "", new { @class = "text-danger" })
+                            @Html.DropDownListFor(model => model.AId, null, "Select type", new { @class = "form-control" })
+
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control", @placeholder = "Enter alert title" } })
+                            @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.TextAreaFor(model => model.Description, new { @class = "form-control", @placeholder = "Enter alert description" })
+                            @*@Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })*@
+                            @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.SitesAffected, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.SitesAffected, new { htmlAttributes = new { @class = "form-control", @placeholder = "Enter the name of affected sites" } })
+                            @Html.ValidationMessageFor(model => model.SitesAffected, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-md-2">
+                            @Html.LabelFor(model => model.Facebook)
+                            <i class="fa fa-info-circle left" data-toggle="tooltip" data-placement="bottom" data-original-title="This will post the alert to the Explore Parks Facebook page"></i>
+                        </label>
+                            <div class="col-md-2">
+
+                                @Html.DropDownListFor(model => model.Facebook, new SelectList(
+                  new List<Object>{
+                       new { value = "Yes" , text = "Yes"  },
+                       new { value = "No" , text = "No" }
+
+                    },
+                  "value",
+                  "text",
+                   Model.Facebook), new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Facebook, "", new { @class = "text-danger" })
+
+                            </div>
+</div>
+
+                    <div class="form-group">
+                        
+                        <label class = "control-label col-md-2">@Html.LabelFor(model=>model.SMS) <i class="fa fa-info-circle left" data-toggle="tooltip" data-placement="bottom" data-original-title="This will send SMS to all alert subscribers"></i></label>
+                       
+                        <div class="col-md-2">
+
+                            @Html.DropDownListFor(model => model.SMS, new SelectList(
+                  new List<Object>{
+                       new { value = "Yes" , text = "Yes"  },
+                       new { value = "No" , text = "No" }
+
+                    },
+                  "value",
+                  "text",
+                   Model.SMS), new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.SMS, "", new { @class = "text-danger" })
+
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-md-2">@Html.LabelFor(model => model.Twitter) <i class="fa fa-info-circle left" data-toggle="tooltip" data-placement="bottom" data-original-title="This will post the alert to the DPaW Twitter account"></i></label>
+                        <div class="col-md-2">
+
+                            @Html.DropDownListFor(model => model.Twitter, new SelectList(
+                  new List<Object>{
+                       new { value = "Yes" , text = "Yes"  },
+                       new { value = "No" , text = "No" }
+
+                    },
+                  "value",
+                  "text",
+                   Model.Twitter), new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.Twitter, "", new { @class = "text-danger" })
+
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-md-2">
+                            @Html.LabelFor(model => model.PushNotification)
+                            <i class="fa fa-info-circle left" data-toggle="tooltip" data-placement="bottom" data-original-title="This will send push notification to the DPaW Alerts app users"></i>
+                        </label>
+                        <div class="col-md-2">
+
+                            @Html.DropDownListFor(model => model.PushNotification, new SelectList(
+                  new List<Object>{
+                       new { value = "Yes" , text = "Yes"  },
+                       new { value = "No" , text = "No" }
+
+                    },
+                  "value",
+                  "text",
+                   Model.PushNotification), new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.PushNotification, "", new { @class = "text-danger" })
+
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-2">
+
+                            @Html.DropDownListFor(model => model.Email, new SelectList(
+                  new List<Object>{
+                       new { value = "Yes" , text = "Yes"  },
+                       new { value = "No" , text = "No" }
+
+                    },
+                  "value",
+                  "text",
+                   Model.Email), new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.WebLink, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.WebLink, new { htmlAttributes = new { @class = "form-control", @placeholder = "Enter the website link related to this alert" } })
+                            @Html.ValidationMessageFor(model => model.WebLink, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <fieldset>
+                        <legend>Author Infomation</legend>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.CreatedBy, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-3">
+                                @Html.DisplayFor(model => model.CreatedBy)
+
+                            </div>
+                            @Html.LabelFor(model => model.CreateDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-3">
+                                @Html.DisplayFor(model => model.CreateDate)
+
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.UpdatedBy, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-3">
+                                @Html.DisplayFor(model => model.UpdatedBy)
+
+                            </div>
+                            @Html.LabelFor(model => model.UpdateDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-3">
+                                @Html.DisplayFor(model => model.UpdateDate)
+
+                            </div>
+                        </div>
+                    </fieldset>
+
+                </div>
+
+            </div>
+
+            <div class="tab-pane fade" id="park">
+                <br />
+                <p>
+                    @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-plus'></span> Add Location", "Add Location", "AddLocation", "Locations", new { id = Model.AlertId }, htmlAttributes: new { data_modal = "", @class = "btn btn-primary" })
+                </p>
+
+                <div id="locations">@Html.Action("Index", "Locations", new { id = Model.AlertId })</div>
+                
+            </div>
+            <div class="tab-pane fade" id="files">
+                <h3>  @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-plus'></span> Add File", "Add File", "AddFile", "AlertFiles", new { id = Model.AlertId }, htmlAttributes: new { file_data_modal = "", @class = "btn btn-primary" })</h3>
+
+                <div id="fileslist">@Html.Action("Index", "AlertFiles", new { id = Model.AlertId })</div>
+            </div>
+        </div>
+    </div>
+}
+<!-- modal placeholder-->
+<div id='myModal' class='modal fade in'>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id='myModalContent'></div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<!--[if !IE]><!-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bluebird/3.3.5/bluebird.min.js"></script>
+<!--<![endif]-->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDaJlkDXFC39cH9PQo7j3C9RmUAFkXAEQY" async defer></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" />
+ <link rel="stylesheet" href="~/Content/chosen/chosen.min.css" />  
+<script src="https://unpkg.com/leaflet@1.0.1/dist/leaflet-src.js"></script>
+<script src='~/Scripts/Leaflet.GoogleMutant.js'></script>
+
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/date")
+    @Styles.Render("~/Content/css/form")
+    @Scripts.Render("~/bundles/alerts")
+ 
+}

@@ -1,0 +1,28 @@
+﻿<html>
+<head>
+    <title>Welcome email</title>
+	<meta charset="utf-8" />
+	
+</head>
+<body>
+<div style="background-color: #EFF0F1; font: Arial; font-size:14px; padding: 10px; border-radius: 6px;">
+<div style="padding:40px;">
+<p style="font-weight: bold; font-size:28px; vertical-align: top;"><img src="https://alerts.dbca.wa.gov.au/img/logo.png" alt="Department of Parks and Wildlife" style="width:60px; height:30px;" />
+ <hr /></p>
+<p> Welcome {0} {1}, <br /><br />
+Your request to the DPaW Alerts system has been approved. Please use the following information to login to the system.</p>
+<p>Username: {2} <br/>
+Password: Use your computer login password <br />
+<i>Go to the backend login url to post and manage alerts.</i> </p>
+
+<p>Regards, <br />
+<b>System Admin</b> <br />
+DPaW Alerts System <br />
+</p>
+<p>Frontend: <a href="https://alerts.dbca.wa.gov.au">https://alerts.dbca.wa.gov.au</a> </p>
+<p>Backend login: <a href="https://alerts.dbca.wa.gov.au/alerts/">https://alerts.dpaw.wa.gov.au/alerts/</a> </p>
+<p style="color:red">This is an automatic system email, please don't reply.</p>
+</div>
+</div>
+</body>
+</html>

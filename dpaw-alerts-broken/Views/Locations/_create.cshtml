@@ -1,0 +1,223 @@
+﻿@model dpaw_alerts.Models.Location
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h4 class="modal-title" id="myModalLabel">Add Park/location</h4>
+</div>
+@*@using (Html.BeginForm("Create", "Locations", FormMethod.Post))*@
+@using (Html.BeginForm())
+{
+    <div class="modal-body">
+        @Html.AntiForgeryToken()
+        <div class="form-horizontal">
+            <div id="msgmodal"></div>
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.LabelFor(model => model.RPrkId, htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-6">
+                    @Html.DropDownListFor(model => model.RPrkId, ViewBag.RPrkId as SelectList, "Select Park", new { @class = "form-control chzn-select" })
+                    @Html.ValidationMessageFor(model => model.RPrkId, "", new { @class = "text-danger" })
+                    
+                </div>
+            </div>
+            <div class="form-group" style="text-align:center;">
+                <div class="col-md-12">
+                    <strong>OR</strong>
+                    <hr />
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-6">
+                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Latitude, htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-6">
+                    @Html.EditorFor(model => model.Latitude, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Latitude, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Longitude, htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-6">
+                    @Html.EditorFor(model => model.Longitude, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Longitude, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Contact, htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-6">
+                    @Html.EditorFor(model => model.Contact, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Contact, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-6">
+                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+        </div>
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#FaqBasic" href="#faqBasic1" id="map_collapse">
+                      <i class="fa fa-chevron-down"></i>  Open Map <i class="fa fa-map-o"></i>
+                    </a>
+                </h4>
+            </div>
+            <div id="faqBasic1" class="panel-collapse collapse" style="height: 0px;">
+                <div class="panel-body">
+                    <div id="lmap" style="width:100%; height:300px">Please wait to load the map</div>
+                </div>
+            </div>
+        </div>
+        <div class="loadingOverlay hide">
+            <div class="loading-spinner">
+                <img src="~/img/loading.png" title="Loading" />
+                <span class="loading-text">Loading...</span>
+            </div>
+        </div>
+        <script src="~/Scripts/app/GPX.js"></script>
+        <script type="text/javascript">
+
+            var map;
+
+            $(function () {
+
+                var latlng = L.latLng(-30.81881, 116.16596);
+                map = L.map('lmap', { center: latlng, zoom: 6 });
+                var lcontrol = new L.control.layers();
+                //reset the map size on dom ready
+                map.invalidateSize(true);
+
+                function loadMap() { 
+                    var roadMutant = L.gridLayer.googleMutant({
+                        type: 'roadmap' // valid values are 'roadmap', 'satellite', 'terrain' and 'hybrid'
+                    }).addTo(map);
+                    var satMutant = L.gridLayer.googleMutant({
+                        maxZoom: 24,
+                        type: 'satellite'
+                    });
+
+                    var terrainMutant = L.gridLayer.googleMutant({
+                        maxZoom: 24,
+                        type: 'terrain'
+                    });
+
+                    var hybridMutant = L.gridLayer.googleMutant({
+                        maxZoom: 24,
+                        type: 'hybrid'
+                    });
+
+                    var mun = appUrl + "/media/Munda_Biddi_Trail.gpx";
+                    var bib = appUrl + "/media/Bibbulmun_Track.gpx";
+                    var cape = appUrl + "/media/Cape_to_Cape_Track.gpx";
+                    var mtrack = new L.GPX(mun, {
+                        async: true,
+                        marker_options: {
+                            startIconUrl: null,
+                            endIconUrl: null,
+                            shadowUrl: null
+                        },
+                        polyline_options: { color: '#0170FF' }
+                    }).on("loaded", function (e) {
+                        map.fitBounds(e.target.getBounds());
+                    });
+                    var btrack = new L.GPX(bib, {
+                        async: true,
+                        marker_options: { startIconUrl: null, endIconUrl: null, shadowUrl: 'images/pin-shadow.png' },
+                        polyline_options: { color: '#8C211F' }
+                    }).on("loaded", function (e) {
+                        map.fitBounds(e.target.getBounds());
+                    });
+                    var ctrack = new L.GPX(cape, {
+                        async: true,
+                        marker_options: {
+                            startIconUrl: null,
+                            endIconUrl: null,
+                            shadowUrl: null
+                        },
+                        polyline_options: { color: '#F58025' }
+
+                    }).on("loaded", function (e) {
+                        map.fitBounds(e.target.getBounds());
+                    });
+                    map.addLayer(mtrack);
+                    map.addLayer(btrack);
+                    map.addLayer(ctrack);
+
+                    //add the control on the map
+
+                    lcontrol = L.control.layers({
+                        Roadmap: roadMutant,
+                        Aerial: satMutant,
+                        Terrain: terrainMutant,
+                        Hybrid: hybridMutant //,Styles: styleMutant
+
+                    }, { 'Munda Biddi': mtrack, 'Cape to Cape': ctrack, 'Bibbulmun': btrack }, {
+                            collapsed: true
+                        }).addTo(map);
+
+                    $(".loadingOverlay").show();
+
+                    var popup = L.popup();
+
+                        function onMapClick(e) {
+                            popup
+                                .setLatLng(e.latlng)
+                                .setContent("Lat: " + e.latlng.lat.toString() + "<br /> Lon: " + e.latlng.lng.toString())
+                                .openOn(map);
+                            // map.panTo(new L.LatLng(-30.81881, 116.16596));
+
+                            $('.modal-body #Latitude').val(e.latlng.lat);
+                            $('.modal-body #Longitude').val(e.latlng.lng);
+                        }
+
+                        map.on('click', onMapClick);
+
+                }
+                    
+
+                    $(document).on('shown.bs.modal', function (e) {
+                        map.invalidateSize();
+                        //loadMap();
+                    });
+
+                    $(document).on('shown.bs.collapse', function (e) {
+                        clearMap();
+                        map.invalidateSize();
+                        loadMap();
+                    });
+                
+                    function clearMap() {
+                        // clear all layers before it reloads;
+                        map.eachLayer(function (layer) {
+                            map.removeLayer(layer);
+                        });
+                        map.removeControl(lcontrol);
+                    }
+            });
+
+
+        </script>
+    </div>
+    <div class="modal-footer">
+        <button class="btn" type="button" data-dismiss="modal">Cancel</button>
+        <input class="btn btn-primary" type="submit" value="Add" />
+    </div>
+}
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+
+
+}

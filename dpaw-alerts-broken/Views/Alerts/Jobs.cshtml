@@ -1,0 +1,29 @@
+﻿
+@{
+    ViewBag.Title = "Jobs";
+}
+
+<div id="breadcrumb">
+    <ul class="breadcrumb">
+        <li><i class="fa fa-home"></i><a href="~/Home"> Home</a></li>
+
+        <li class="active">Hangfire Jobs</li>
+    </ul>
+</div><!-- /breadcrumb-->
+<script>
+
+
+    $(window).load(function () {
+        var doc = document.getElementById('hangf').contentWindow.document;
+        $(doc).find('.navbar-right').hide();
+        // cont.hide();
+        $(doc).find('.container').css('margin-left', 0);
+    });
+</script>
+<div class="row">
+    <iframe src="~/jobs" frameborder="0" id="hangf" height="800" width="100%" ></iframe>
+</div>
+
+
+   
+

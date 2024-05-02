@@ -1,0 +1,52 @@
+﻿
+@{
+    ViewBag.Title = "kmlmap";
+}
+
+<h2>kmlmap</h2>
+<link rel="stylesheet" href="/Content/leaflet.css" />
+<script src="~/Scripts/app/leaflet.js"></script>
+ <!-- Bring in the leaflet KML plugin -->
+<script src="~/Scripts/app/KML.js"></script>  
+<script language="javascript">
+    $(function () {
+       
+            var latlng = L.latLng(-30.81881, 116.16596);
+            var map = L.map('map1', { center: latlng, zoom: 6 });
+         
+         map.invalidateSize(true);
+      	 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
+            maxZoom: 18
+         }).addTo(map);
+         map.attributionControl.setPrefix(''); // Don't show the 'Powered by Leaflet' text.
+
+         var kmlLayer = new L.KML("/media/Cape_to_Cape_Track.kml", { async: true });
+
+         kmlLayer.on("loaded", function(e) {
+            map.fitBounds(e.target.getBounds());
+         });
+
+         map.addLayer(kmlLayer);
+
+         var polyline = L.polyline([
+            [-41.286, 174.796],
+            [-41.281, 174.786],
+            [-41.279, 174.776],
+            [-41.290, 174.775],
+            [-41.292, 174.788],
+             [-41.286, 174.796]],
+             {
+                color: 'red',
+                weight: 10,
+                opacity: .7,
+                dashArray: '20,15',
+                lineJoin: 'round'
+            }).addTo(map);
+
+         $('svg.leaflet-zoom-animated').attr("width",'auto');
+    });
+</script>
+<div class="row">
+    <div id="map1" style="height: 600px; width:90%; margin-top:0px; margin-left:0px;">some text</div>
+</div>

@@ -1,0 +1,12 @@
+﻿Parks Alerts - Version v4.0 (18/09/2017)
+Developer - Mohammed Tajuddin
+
+This version includes the following changes - 
+
+	 - Renamed Department of Parks and Wildlife to Parks and Wildlife Service
+	 - Removed DFES Alerts from the navigation menu (_SearchPanel.cshtml)
+	 - Removed DFES RSS feed from the homepage tab (_PublicLayout.cshtml)
+	 - Changed the JS File ()
+	 - Copyright and privacy added
+	 - Google Copyright message on the map is fixed
+	 - Google Mutant plugin updated

@@ -1,0 +1,388 @@
+﻿
+@model IEnumerable<dpaw_alerts.Models.Alert>
+
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<div id="breadcrumb">
+    <ul class="breadcrumb">
+        <li><i class="fa fa-home"></i><a href="~/Home"> Home</a></li>
+        <li class="active">Archived Alerts</li>
+    </ul>
+</div><!-- /breadcrumb-->
+<div class="main-header clearfix">
+    <div class="page-title">
+        <h3 class="no-margin">Archived records</h3>
+       
+    </div><!-- /page-title -->
+
+
+</div><!-- /main-header -->
+
+
+<div class="row padding-md">
+    <div class="panel-tab clearfix">
+        <ul class="tab-bar tab-primary">
+            <li class="active"><a href="#home" data-toggle="tab"><i class="fa fa-list-alt"></i> List</a></li>
+
+            <li><a href="#mapview" data-toggle="tab" id="gmap"><i class="fa fa-map"></i> Map</a></li>
+        </ul>
+    </div>
+
+    <div class="tab-content">
+        <div class="tab-pane fade in active" id="home">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3>   Alerts List</h3>
+
+                </div>
+
+                <div class="panel-body">
+                   
+                    <div id="msg">@ViewBag.Error </div>
+                    <table class="table table-striped table-hover" id="dataTable">
+                        <thead>
+                            <tr>
+                                <th>##</th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Title)
+                                </th>
+                                <th>
+                                    Type
+                                </th>
+                                <th>Parks/Locations</th>
+                                <th>Files</th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.StartDate)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.EndDate)
+                                </th>
+                                <th>
+                                    Channels
+                                </th>
+                                
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Published)
+                                </th>
+                                <th>
+                                    Author/s and Dates
+                                </th>
+
+                                <th class="no-sort"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{int rowNo = 0;}
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@(rowNo += 1)</td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Title)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.alertType.Name)
+                                    </td>
+                                    <td>
+                                        <ul class="list-unstyled">
+                                            
+                                            @foreach (var location in item.Location)
+                                            {
+                                                <li>
+                                                    <a href="#siteInfo" data-value="@location.LocId" class="blue site" role="button" data-toggle="modal">
+                                                        <i class="fa fa-map-marker blue" ></i>     @Html.DisplayFor(locItem => location.Name)
+                                                    </a>
+                                                </li>
+                                            }
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        <ul class="list-unstyled">
+                                            @foreach (var file in item.Files)
+                                            {
+                                                <li>
+                                                    @if (file.FileType == "pdf")
+                                                    {
+
+                                                        <a href='@Url.Content(file.FilePath)' title="Download file" target="_blank">
+                                                            <i class="fa fa-file-pdf-o red"></i>  @Html.DisplayFor(modelItem => file.FileTitle)  (@Html.DisplayFor(modelItem => file.FileSize))
+                                                        </a>
+                                                    }
+                                                    else if (file.FileType == "docx" || file.FileType == "doc")
+                                                    {
+                                                        <a href='@Url.Content(file.FilePath)' title="Download file" target="_blank">
+                                                            <i class='fa fa-file-word-o blue'></i>   @Html.DisplayFor(modelItem => file.FileTitle)  (@Html.DisplayFor(modelItem => file.FileSize))
+                                                        </a>
+                                                    }
+                                                </li>
+                                            }
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.StartDate)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.EndDate)
+                                    </td>
+                                    <td width="100">
+                                        <div class="btn-group btn-group-xs" role="group">
+
+                                            @if (item.Facebook == "Yes")
+                                            { <a class="btn btn-xs btn-default disabled" aria-label="Facebook" title="Facebook"><i class="fa fa-facebook-official blue" aria-hidden="true"></i></a> }
+                                            @if (item.Twitter == "Yes")
+                                            { <a class="btn btn-xs btn-default disabled" title="Twitter"><i class="fa fa-twitter green" aria-hidden="true"></i></a> }
+                                            @if (item.Email == "Yes")
+                                            { <a class="btn btn-xs btn-default disabled red" aria-label="Email" title="Email"><i class="fa fa-envelope-o" aria-hidden="true"></i></a> }
+                                            @if (item.SMS == "Yes")
+                                            { <a class="btn btn-xs btn-default disabled" title="SMS"><i class="fa fa-mobile" aria-hidden="true"></i></a> }
+                                            @if (item.PushNotification == "Yes")
+                                            { <a class="btn btn-xs btn-default disabled" title="Push notification"><i class="fa fa-podcast purple" aria-hidden="true" title="Push notification"></i></a> }
+
+                                        </div>
+                                    </td>
+                                   
+                                    <td>
+                                        @if (item.Published == "Yes")
+                                        {
+                                            <i class="fa fa-circle green" title="Published"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="fa fa-circle red" title="Not published"></i>
+                                        }
+
+                                    </td>
+                                    <td width="250">
+                                        <small class="text-muted">
+                                            <i class="fa fa-user-circle-o purple"></i>
+                                            @Html.DisplayFor(modelItem => item.CreatedBy)
+                                            <i class="fa fa-calendar-check-o green"></i>     @Html.DisplayFor(modelItem => item.CreateDate) <br />
+                                            <i class="fa fa-user-circle-o blue"></i>
+                                            @Html.DisplayFor(modelItem => item.UpdatedBy)
+                                            <i class="fa fa-calendar-check-o"></i>     @Html.DisplayFor(modelItem => item.UpdateDate)
+                                        </small>
+                                    </td>
+
+                                    <td>
+                                        <div class="btn-group-xs">
+                                            @Html.ActionLink("View", "Details", "Alerts", new { id = item.AlertId }, new { @class = "btn btn-sm btn-success" })
+                                            @if(User.IsInRole("Admin"))
+                                            { 
+                                            @*<input type="button" value="Delete" class="btn btn-danger delete" data-value="@item.AlertId" />*@
+                                            }
+                                        </div>
+
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="mapview">
+
+
+            <br />
+
+            <div class="loadingOverlay">
+                <div class="loading-spinner">
+                    <img src="~/img/loading.png" title="Loading" />
+                    <span class="loading-text">Loading...</span>
+                </div>
+            </div>
+            <!-- This is the div that will contain the Google Map -->
+            <div id="lmap" style="height: 550px; width:100%;"> </div>
+        </div>
+
+
+    </div>
+
+</div>
+<!--Modal-->
+<div class="modal fade" id="parkInfo">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4>Park Information</h4>
+            </div>
+            <div class="modal-body">
+                <div id="parkContent"><center> <img src="~/img/loading.png" /> <br /> Loading ... </center></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-success" data-dismiss="modal" aria-hidden="true">Close</button>
+
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!--Modal-->
+<div class="modal fade" id="siteInfo">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4>Site Information</h4>
+            </div>
+            <div class="modal-body">
+                <div id="siteContent"><center> <img src="~/img/loading.png" /> <br /> Loading ... </center></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-success" data-dismiss="modal" aria-hidden="true">Close</button>
+
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.0-beta.2/leaflet.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.0-beta.2/leaflet.js"></script>
+<script src="~/Scripts/leaflet.markercluster-src.js"></script>
+<link href="~/Content/MarkerCluster.css" rel="stylesheet" />
+<link href="~/Content/MarkerCluster.Default.css" rel="stylesheet" />
+@section scripts
+{
+    <script type="text/javascript">
+            var map;
+
+            $(function () {
+
+                $(".delete").click(function (e) {
+
+                    if (confirm('Are you sure want to delete?')) {
+                        e.preventDefault();
+                        var parent = $(this).parent().parent().parent();
+
+                        {
+
+                            $.ajax({
+                                url: '@Url.Action("AjaxDelete", "Alerts")',
+                                type: 'POST',
+                                dataType: 'json',
+                                async: true,
+                                data: { 'id': $(this).attr('data-value') },
+                                contentType: 'application/x-www-form-urlencoded',
+                                beforeSend: function () {
+                                    parent.animate({ 'backgroundColor': '#fb6c6c' }, 300);
+                                },
+                                success: function (data) {
+                                    if (data.success) {
+
+                                        $("#msg").html("<div class='alert alert-success'>The alert has been deleted from the system! </div>");
+
+                                        parent.slideUp(300, function () {
+                                            parent.remove();
+                                        });
+
+                                    }
+                                    else {
+                                        // show a message in a alert or div
+                                        $("#msg").html("<div class='alert alert-danger'>"+data.message+" </div>");
+                                    }
+                                }
+                            });
+                        }
+                    }
+                    else return false;
+                });
+
+                $(".park").click(function (e) {
+                    var id = $(this).attr("data-value");
+                    var url = '@Url.Action("Details", "Parks")' + "/" + id;
+                    // alert(id);
+                    $("#parkContent").load(url);
+
+                });
+
+                $(".site").click(function (e) {
+                    var id = $(this).attr("data-value");
+                    var url = '@Url.Action("Details", "Locations")' + "/" + id;
+                    // alert(id);
+                    $("#siteContent").load(url);
+
+                });
+
+               
+                //set the data table
+                $('#dataTable').dataTable({
+                    // "bSort" : false,
+                    "bJQueryUI": true,
+                    "sPaginationType": "full_numbers",
+                   // "aaSorting": [[4, "desc"]],
+                    "aoColumnDefs": [
+                                        { "sType": "date", "aTargets": [4]}, {"bSortable": false, "aTargets": [9, 10] }
+                    ],
+
+                });
+
+
+
+            });
+            var baseUrl = document.location.origin;
+            var appUrl = baseUrl; // + "/alerts";
+
+        $(function loadmap() {
+
+            $(".loadingOverlay").show();
+
+            // alert("I ma working");
+            var tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 16,
+                attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors, Points &copy 2012 LINZ'
+            }),
+                latlng = L.latLng(-30.81881, 116.16596);
+
+            var map = L.map('lmap', { center: latlng, zoom: 6, layers: [tiles] });
+
+            var markers = L.markerClusterGroup({ chunkedLoading: true });
+
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("ArchivedMap", "Alerts")',
+                dataType: 'json',
+                contentType: 'application/x-www-form-urlencoded',
+                success: function (data) {
+
+                    $.each(data, function (i, item) {
+                        var img = appUrl+ (item.IconUrl).replace("~", "");
+                        var dpawIcon = L.icon({ iconUrl: img, iconSize: [42, 42] });
+                        var marker = L.marker(L.latLng(item.Latitude, item.Longitude), { icon: dpawIcon }, { title: item.Name });
+                        var content = "<div class='infoDiv'><h3>" + item.Name + "</h3><p>" + item.Title + "</p><a href='"+appUrl+"/Alerts/Details/" + item.AlertId + "' class='btn btn-success btn-sm'>Read More</a></div>";
+                        marker.bindPopup(content);
+                        markers.addLayer(marker);
+
+                    });
+
+
+                }
+
+            })
+           .done(function () {
+               $(".loadingOverlay").hide();
+               map.invalidateSize(true);
+           });
+
+
+            map.addLayer(markers);
+
+            $('#gmap').on('shown.bs.tab', function (e) {
+                map.invalidateSize(true);
+            })
+
+            map.on('focus', function () { map.scrollWheelZoom.enable(); });
+            map.on('blur', function () { map.scrollWheelZoom.disable(); });
+        });
+
+
+    </script>
+
+
+}
+
+
+
+

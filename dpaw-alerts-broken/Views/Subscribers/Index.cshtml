@@ -1,0 +1,197 @@
+﻿@model IEnumerable<dpaw_alerts.Models.Subscriber>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<div id="breadcrumb">
+    <ul class="breadcrumb">
+        <li><i class="fa fa-home"></i><a href="~/Home"> Home</a></li>
+
+        <li class="active">Subscribers</li>
+    </ul>
+</div><!-- /breadcrumb-->
+<div class="main-header clearfix">
+    <div class="page-title">
+        <h3 class="no-margin">Newsletter Subscribers</h3>
+
+    </div><!-- /page-title -->
+
+</div><!-- /main-header -->
+
+<p>
+    
+</p>
+
+<div class="row padding-md">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3>
+                @Html.ActionLink("Add New", "Create", null, new { @class = "btn btn-info" })
+                @Html.ActionLink("Email Template",  "Index", "EmailTemplates", null,  new { @class = "btn btn-primary" })
+            </h3>
+
+        </div>
+
+        <div class="panel-body">
+            @if (TempData["Message"] != null)
+            {
+                <div class="alert alert-success" id="msg">
+                    <i class="glyphicon glyphicon-info-sign"></i> @Html.Raw(TempData["Message"].ToString())
+                </div>
+            }
+           <div id="msg"> </div>
+@if (Model.Count() == 0)
+{
+    <div class="alert alert-warning">No subscriber has been created yet.</div>
+}
+else
+{
+            <table class="table table-striped table-hover" id="dataTable">
+                <thead>
+                    <tr>
+                        <th>##</th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.FirstName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.LastName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Email)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Mobile)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.SubscriptionDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.SubscriptionType)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Status)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.CreateDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.CreatedBy)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{int rowNo = 0;}
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            
+                            <td> @(rowNo += 1)</td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.FirstName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.LastName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Email)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Mobile)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SubscriptionDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SubscriptionType)
+                            </td>
+                            <td>
+                                @if (item.Status == "Active")
+                                {
+                                    <i class="fa fa-circle green" title="Active"></i>
+                                }
+                                else
+                                {
+                                    <i class="fa fa-circle red" title="Inactive"></i>
+                                }
+                                
+                                
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CreateDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CreatedBy)
+                            </td>
+                            <td>
+                                <div class="btn-group-xs">
+                                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-info" })
+
+                                    <input type="button" value="Delete" class="btn btn-danger delete" data-value="@item.Id" />
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+}
+            </div>
+        </div>
+    </div>
+
+
+<script>
+
+    $(function () {
+
+        $(".delete").click(function (e) {
+
+            if (confirm('Are you sure want to delete?')) {
+                e.preventDefault();
+                var parent = $(this).parent().parent().parent();
+
+                {
+
+                    $.ajax({
+                        url: '@Url.Action("AjaxDelete", "Subscribers")',
+                        type: 'POST',
+                        dataType: 'json',
+                        async: true,
+                        data: { 'id': $(this).attr('data-value') },
+                        contentType: 'application/x-www-form-urlencoded',
+                        beforeSend: function () {
+                            parent.animate({ 'backgroundColor': '#fb6c6c' }, 300);
+                        },
+                        success: function (data) {
+                            if (data.success) {
+
+                                $("#msg").html("<div class='alert alert-success'>The subsriber has been deleted from the system! </div>");
+
+                                parent.slideUp(300, function () {
+                                    parent.remove();
+                                });
+
+                            }
+                            else {
+                                // show a message in a alert or div
+                                $("#msg").html("<div class='alert alert-danger'>Sorry, the subscriber cannot be deleted! </div>");
+                            }
+                        }
+                    });
+                }
+            }
+            else return false;
+        });
+    
+
+        //set the data table
+        $('#dataTable').dataTable({
+            "bJQueryUI": true,
+            "sPaginationType": "full_numbers",
+            "aoColumnDefs": [{ "bSortable": false, "aTargets": [10] }]
+        });
+    });
+
+
+</script>

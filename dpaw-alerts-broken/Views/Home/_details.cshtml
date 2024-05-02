@@ -1,0 +1,78 @@
+﻿@model dpaw_alerts.Models.Location
+
+<div>
+    <h3> @Model.Name</h3>
+    <dl class="dl-horizontal left">
+        
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+               
+        <dt>
+            @Html.DisplayNameFor(model => model.Longitude)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Longitude)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Latitude)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Latitude)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Contact)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Contact)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+       
+    </dl>
+    </div>
+<h3>Map</h3>
+<div id="locationmap" style="max-width:560px; height: 300px"> <center> <img src="~/img/loading.png" /> <br /> Loading ... </center></div>
+
+<script type="text/javascript">
+
+    
+    $(function()
+    {
+        var latlng = L.latLng(@Model.Latitude,  @Model.Longitude);
+        var map = L.map('locationmap', { center: latlng, zoom: 6 });
+        var roads = L.gridLayer.googleMutant({
+            type: 'roadmap' // valid values are 'roadmap', 'satellite', 'terrain' and 'hybrid'
+        }).addTo(map);
+		
+		
+
+            $(".loadingOverlay").show();
+            var uri=appUrl + ('@Model.alert.alertType.IconUrl').replace("~", "");
+            var lIcon = L.icon({
+                iconUrl:  uri,
+                iconSize: [42, 42],
+                iconAnchor: [16, 37],
+                popupAnchor: [0, -28]
+            });
+            var marker = L.marker(L.latLng(@Model.Latitude, @Model.Longitude), { icon: lIcon }, { title: '@Model.Name' }).bindPopup('@Model.Name').addTo(map);
+        
+    });
+
+    
+ </script>

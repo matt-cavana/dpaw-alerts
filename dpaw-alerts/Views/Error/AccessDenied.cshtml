@@ -1,0 +1,41 @@
+﻿@model System.Web.Mvc.HandleErrorInfo
+@{
+
+    ViewBag.Title = "Error";
+}
+<div id="breadcrumb">
+    <ul class="breadcrumb">
+        <li><i class="fa fa-home"></i><a href="~/Home/"> Home</a></li>
+        
+        <li class="active">Access denied</li>
+    </ul>
+</div><!-- /breadcrumb-->
+<div class="main-header clearfix">
+    <div class="page-title">
+        <h3 class="no-margin">Unauthorized Access Attempt</h3>
+       
+    </div><!-- /page-title -->
+
+
+</div><!-- /main-header -->
+
+<div class="row">
+    <div class="alert alert-danger">
+      <i class="glyphicon glyphicon-warning-sign"></i>  ERROR! You are not authorised to access this page, please contact admin for assistance.
+    </div>
+    @if (Model != null && HttpContext.Current.IsDebuggingEnabled)
+    {
+        <div>
+            <p>
+                <b>Exception:</b> @Model.Exception.Message<br />
+                <b>Controller:</b> @Model.ControllerName<br />
+                <b>Action:</b> @Model.ActionName
+            </p>
+            <div style="overflow:scroll">
+                <pre>
+@Model.Exception.StackTrace
+                </pre>
+            </div>
+        </div>
+    }
+</div>

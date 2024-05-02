@@ -1,0 +1,246 @@
+﻿@{
+    ViewBag.Title = "About";
+}
+<h2>@ViewBag.Title.</h2>
+<h3>@ViewBag.Message</h3>
+
+<p>Use this area to provide additional information.</p>
+
+
+    <style>
+         .infoDiv {
+        max-height: 200px;
+        width: 300px;
+        -webkit-user-select: none;
+        background-color: white;
+    }
+    .infoDiv h3{
+        margin-top:10px;
+        color:#db6008;
+        text-shadow: 2px 2px rgba(242,240,238,0.5);
+    }
+
+        #map {
+            height: 600px;
+            width:900px;
+        }
+    </style>
+<script src="~/Scripts/markerclusterer.js"></script>
+
+
+    <div id="map"> fsd fsdfsdfsd fsd</div>
+<script>
+    //google.load('map', '3', {
+    //    other_params: 'sensor=false'
+    //});
+    //google.setOnLoadCallback(initMap);
+    var imageUrl = 'http://chart.apis.google.com/chart?cht=mm&chs=24x32&' +
+         'chco=FFFFFF,008CFF,000000&ext=.png';
+    var markerClusterer = null;
+
+    function initMap() {
+
+        var stack = [];
+
+        var center = new google.maps.LatLng(-30.81881, 116.16596);
+        var options = {
+            'zoom': 5,
+            'center': center,
+            'mapTypeId': google.maps.MapTypeId.ROADMAP
+        };
+        var map = new google.maps.Map(document.getElementById("map"), options);
+        var infowindow = new google.maps.InfoWindow();
+        var icon = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
+
+        var markerImage = new google.maps.MarkerImage(imageUrl,
+          new google.maps.Size(24, 32));
+
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("map", "Parks")',
+            dataType: 'json',
+            contentType: 'application/x-www-form-urlencoded',
+            success: function (data) {
+                //  data1 = JSON.stringify(data);
+                // $("#data").html(data1);
+                $.each(data, function (i, item) {
+                    // alert(item.Longitude);
+                    var marker = new google.maps.Marker({
+                        'position': new google.maps.LatLng(item.Latitude, item.Longitude),
+                        'map': map,
+                        //'title': item.Name,
+                        label:"A",
+                        'icon': markerImage
+                        
+                        
+                    });
+
+                    // Make the marker-pin blue!
+                   // marker.setIcon('http://maps.google.com/mapfiles/ms/icons/blue-dot.png')
+
+                    google.maps.event.addListener(marker, 'click', (function (marker, i) {
+                        return function () {
+                            if (infowindow) infowindow.close();
+                            infowindow = new google.maps.InfoWindow({ content: "<div class='infoDiv'><h3>" + item.Name + "</h3>" + item.Description + "</div>" });
+
+                            infowindow.open(map, marker);
+                        }
+                    })(marker, i)
+                    );
+
+                   
+                    stack.push(marker);
+
+
+                    // finally hook up an "OnClick" listener to the map so it pops up out info-window when the marker-pin is clicked!
+                    //google.maps.event.addListener(marker, 'click', function () {
+
+                    //    if (infowindow) infowindow.close();
+                    //    infowindow = new google.maps.InfoWindow({ content: "<div class='infoDiv'><h3>" + item.Name + "</h3>" + item.Description + "</div>" });
+
+                    //    infowindow.open(map, marker);
+                    //});
+                });
+
+                markerClusterer = new MarkerClusterer(map, stack,
+                   { imagePath: '../img/m' });
+
+             //   var mc = new MarkerClusterer(map, stack);
+
+            }
+
+        })
+            .done(function () {
+                $(".loadingOverlay").hide();
+            });
+
+       
+    }
+
+    google.maps.event.addDomListener(window, 'load', initMap);
+
+</script>
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCOsRBDfeNQqH43gthJEC9x81GpH3amW_M&callback=initMap">
+</script>
+    <script>
+
+      function initMap2() {
+
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 3,
+          center: { lat: -30.81881, lng: 116.16596}
+        });
+
+        // Create an array of alphabetical characters used to label the markers.
+        var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+        // Add some markers to the map.
+        // Note: The code uses the JavaScript Array.prototype.map() method to
+        // create an array of markers based on a given "locations" array.
+        // The map() method here has nothing to do with the Google Maps API.
+        //var markers = locations.map(function(location, i) {
+        //  return new google.maps.Marker({
+        //    position: location,
+        //    label: labels[i % labels.length]
+        //  });
+        //});
+        //var markers;
+        var loc;
+        var lbl;
+        var dt;
+        var a = [];
+        var l = [];
+        var iw;
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("map", "Parks")',
+            dataType: 'json',
+            contentType: 'application/x-www-form-urlencoded',
+            success: function (data) {
+                //  data1 = JSON.stringify(data);
+                // $("#data").html(data1);
+               // dt = JSON.parse(data);
+              //  alert(data);
+               
+                    $.each(data, function (i, item) {
+                        // alert(item.Longitude);
+                        loc = '{"lat":' + item.Latitude + ', "lng":' + item.Longitude + '}';
+                        lbl = '{' + item.Name + '}';
+                        loc = JSON.parse(loc);
+                       // alert(loc);
+                        a.push(loc);
+                        l.push(lbl);
+                       
+                    });
+
+                 var str = JSON.stringify(a);
+                 var str1 = JSON.stringify(locations);
+                 var strl = JSON.stringify(l);
+                alert(str);
+                alert(str1);
+                alert(labels);
+                alert(strl);
+
+                var markers = a.map(function (location, i) {
+                    return new google.maps.Marker({
+                        position: location,
+                        label: labels[i % labels.length]
+                    });
+                    alert(labels[i % labels.length]);
+                });
+
+                
+
+                // Add a marker clusterer to manage the markers.
+                var markerCluster = new MarkerClusterer(map, markers,
+                    { imagePath: '../img/m' });
+
+                google.maps.event.addListener(markerCluster, 'clusterclick', function (cluster) {
+                    var content = '';
+                    // Convert lat/long from cluster object to a usable MVCObject
+                    var info = new google.maps.MVCObject;
+                    info.set('position', cluster.center_);
+                    if (iw) iw.close();
+                   // iw.setContent('<h1>Hi this is my Info Window</h1>');
+                    iw.open(map, info);
+                });
+            }
+
+        });
+
+       
+          //google.maps.event.addListener(markerCluster, "mouseover", function (mCluster) {
+          //    infowindow.content += "<div>Something<\/div>";
+          //    infowindow.setPosition(mCluster.getCenter());
+          //    infowindow.open(map);
+          //});
+       
+      }
+      var locations = [
+        {lat: -31.563910, lng: 147.154312},
+        {lat: -33.718234, lng: 150.363181},
+        {lat: -33.727111, lng: 150.371124},
+        {lat: -33.848588, lng: 151.209834},
+        {lat: -33.851702, lng: 151.216968},
+        {lat: -34.671264, lng: 150.863657},
+        {lat: -35.304724, lng: 148.662905},
+        {lat: -36.817685, lng: 175.699196},
+        {lat: -36.828611, lng: 175.790222},
+        {lat: -37.750000, lng: 145.116667},
+        {lat: -37.759859, lng: 145.128708},
+        {lat: -37.765015, lng: 145.133858},
+        {lat: -37.770104, lng: 145.143299},
+        {lat: -37.773700, lng: 145.145187},
+        {lat: -37.774785, lng: 145.137978},
+        {lat: -37.819616, lng: 144.968119},
+        {lat: -38.330766, lng: 144.695692},
+        {lat: -39.927193, lng: 175.053218},
+        {lat: -41.330162, lng: 174.865694},
+        {lat: -42.734358, lng: 147.439506},
+        {lat: -42.734358, lng: 147.501315},
+        {lat: -42.735258, lng: 147.438000},
+        {lat: -43.999792, lng: 170.463352}
+      ]
+    </script>
+

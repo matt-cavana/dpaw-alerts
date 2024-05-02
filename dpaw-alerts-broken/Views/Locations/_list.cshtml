@@ -1,0 +1,113 @@
+﻿@model IEnumerable<dpaw_alerts.Models.Location>
+
+
+
+<p> </p>
+<div id="parkslist">
+@if (Model.Count() == 0)
+{
+    <p></p>
+    <div class="alert alert-warning">No location has been added to this alert.</div>
+}
+else
+{
+    <table class="table table-bordered table-hover">
+        <tr>
+            <th>
+                #
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+           
+           
+            <th>
+                @Html.DisplayNameFor(model => model.Latitude)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Longitude)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Contact)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th></th>
+        </tr>
+        @{int rowNo = 0;}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @(rowNo += 1)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                
+                <td>
+                    @Html.DisplayFor(modelItem => item.Latitude)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Longitude)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Contact)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    <div class="btn-group-xs">
+                        <input type="button" value="Delete" class="btn btn-danger deleteLoc" data-value="@item.LocId" />
+                    </div>
+                </td>
+            </tr>
+        }
+
+    </table>
+ }
+</div>
+
+<script>
+    $(".deleteLoc").click(function (e) {
+
+        if (confirm('Are you sure want to delete?')) {
+            e.preventDefault();
+            var parent = $(this).parent().parent().parent();
+
+            {
+
+                $.ajax({
+                    url: '@Url.Action("DeleteLocation", "Locations")',
+                    type: 'POST',
+                    dataType: 'json',
+                    async: true,
+                    data: { 'id': $(this).attr('data-value') },
+                    contentType: 'application/x-www-form-urlencoded',
+                    beforeSend: function () {
+                        parent.animate({ 'backgroundColor': '#fb6c6c' }, 300);
+                    },
+                    success: function (data) {
+                        if (data.success) {
+
+                            $("#msg").html(data.message);
+
+                            parent.slideUp(300, function () {
+                                parent.remove();
+                            });
+
+                        }
+                        else {
+                            // show a message in a alert or div
+                            $("#msg").html(data.message);
+                        }
+                    }
+                });
+            }
+        }
+        else return false;
+    });
+
+</script>

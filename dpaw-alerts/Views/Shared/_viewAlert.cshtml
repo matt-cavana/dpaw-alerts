@@ -1,0 +1,108 @@
+﻿@model dpaw_alerts.Models.Alert
+
+<div>
+    <h3 id="ttl"> <img src='@Url.Content(Model.alertType.IconUrl)' width="32" /> @Model.Title</h3>
+    <div>
+        <p>
+            <strong>
+                @Html.DisplayNameFor(model => model.alertType.Name):
+            </strong>
+
+            <span>
+                @Html.DisplayFor(model => model.alertType.Name)
+            </span>
+        </p>
+       
+        <p>
+            <strong>
+                @Html.DisplayNameFor(model => model.Description):
+            </strong>
+            <br />
+            <div>
+                @Html.Raw(Model.Description)
+            </div>
+        </p>
+        <p>
+            <strong>
+                @Html.DisplayNameFor(model => model.StartDate):
+            </strong>
+
+            <span>
+                @Html.DisplayFor(model => model.StartDate)
+            </span>
+        </p>
+        @if(Model.SitesAffected !=null)
+        {
+
+        <p>
+
+            <strong>
+                @Html.DisplayNameFor(model => model.SitesAffected):
+            </strong>
+
+            <span>
+                @Html.DisplayFor(model => model.SitesAffected)
+            </span>
+        </p>
+        }
+        @if(Model.WebLink != null)
+        {
+
+        <p>
+            <strong>
+                @Html.DisplayNameFor(model => model.WebLink):
+            </strong>
+
+            <span>
+                @Html.DisplayFor(model => model.WebLink)
+            </span>
+        </p> 
+        }
+        <h3 class="page-header">Parks and Locations </h3>
+        <ul class="list-unstyled">
+
+            @foreach (var location in Model.Location)
+            {
+                <li>
+
+                    <strong> <i class="fa fa-arrow-right green"></i>  @Html.DisplayFor(locItem => location.Name) </strong>- @if(location.Contact != null) {<text> T: @Html.DisplayFor(locItem => location.Contact)</text>}@if (location.Email != null) {<text>, E: @Html.DisplayFor(locItem => location.Email)</text>}
+
+                </li>
+            }
+        </ul>
+
+
+       
+        @if (Model.Files.Count() > 0)
+        {
+            <h3 class="page-header">Files</h3>
+
+            <ul class="list-unstyled">
+                @foreach (var file in Model.Files)
+                {
+                    <li>
+                        <a class='@Html.DisplayFor(modelItem => file.FileType)' href='@Url.Content(file.FilePath)' title="Download file" target="_blank">
+                            @Html.DisplayFor(modelItem => file.FileTitle)  (@Html.DisplayFor(modelItem => file.FileSize)) <i class="fa fa-download"></i>
+                        </a>
+                    </li>
+                }
+            </ul>
+        }
+       
+        
+        <p >
+            <small class="text-muted pull-right">
+                <i class="fa fa-clock-o"></i>
+                <strong>
+                    @Html.DisplayNameFor(model => model.UpdateDate):
+                </strong>
+
+                <span>
+                    @Html.DisplayFor(model => model.UpdateDate)
+                </span>
+            </small>
+        </p>
+
+
+    </div>
+</div>

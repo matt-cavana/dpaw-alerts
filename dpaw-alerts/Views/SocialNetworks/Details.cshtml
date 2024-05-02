@@ -1,0 +1,66 @@
+﻿@model dpaw_alerts.Models.SocialNetwork
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>SocialNetwork</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Channel)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Channel)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AppId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AppId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AppSecret)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AppSecret)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AccessToken)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AccessToken)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LongLifeAccessToken)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LongLifeAccessToken)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ExpiryDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ExpiryDate)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -1,0 +1,382 @@
+﻿@using dpaw_alerts.Services
+@model IEnumerable<dpaw_alerts.Models.Alert>
+
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<div id="breadcrumb">
+    <ul class="breadcrumb">
+        <li><i class="fa fa-home"></i><a href="~/Home/"> Home</a></li>
+        <li class="active">Dashboard</li>
+    </ul>
+</div><!-- /breadcrumb-->
+<div class="main-header clearfix">
+    <div class="page-title">
+        <h3 class="no-margin">Dashboard</h3>
+        <span>Welcome to DBCA Park Alerts System</span>
+    </div><!-- /page-title -->
+
+
+</div><!-- /main-header -->
+
+<div class="grey-container shortcut-wrapper" style="text-align: left;">
+    <a href="~/Alerts/Create" class="btn btn-lg btn-success"><i class="fa fa-plus"></i> Create Alert</a>
+
+</div><!-- /grey-container -->
+
+<div class="row padding-md">
+
+    <div class="panel panel-default">
+        <div class="panel-heading clearfix">
+            <span class="pull-left">Active Alerts</span>
+            <ul class="tool-bar">
+                <li><a href="#" class="refresh-widget" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Refresh"><i class="fa fa-refresh"></i></a></li>
+                <li><a href="#collapseWidget" data-toggle="collapse" title="Click to collapse this panel"><i class="fa fa-arrows-v"></i></a></li>
+            </ul>
+        </div>
+        <div class="panel-body no-padding collapse in" id="collapseWidget">
+            <div class="padding-md">
+
+                <div class="col-sm-3 col-md-3">
+                    <div class="panel-stat3 bg-info">
+                        <h2 class="m-top-none" id="userCount"><span id="alv-0">0</span></h2>
+                        <h5 id="al-0">####</h5>
+
+                        <div class="stat-icon">
+                            <i class="fa  fa-anchor fa-3x"></i>
+                        </div>
+
+                    </div>
+                </div><!-- /.col -->
+                <div class="col-sm-3 col-md-3">
+                    <div class="panel-stat3 bg-warning">
+                        <h2 class="m-top-none" id="userCount"><span id="alv-1">0</span></h2>
+                        <h5 id="al-1">####</h5>
+
+                        <div class="stat-icon">
+                            <i class="fa fa-road fa-3x"></i>
+                        </div>
+
+                    </div>
+                </div><!-- /.col -->
+                <div class="col-sm-3 col-md-3">
+                    <div class="panel-stat3 bg-primary">
+                        <h2 class="m-top-none"><span id="serverloadCount"><span id="alv-2">0</span></span></h2>
+                        <h5 id="al-2">####</h5>
+
+                        <div class="stat-icon">
+                            <i class="fa fa-cloud fa-3x"></i>
+                        </div>
+
+                    </div>
+                </div><!-- /.col -->
+                <div class="col-sm-3 col-md-3">
+                    <div class="panel-stat3 bg-success">
+                        <h2 class="m-top-none" id="orderCount"><span id="alv-3">0</span></h2>
+                        <h5 id="al-3">####</h5>
+
+                        <div class="stat-icon">
+                            <i class="fa fa-map fa-3x"></i>
+                        </div>
+
+                    </div>
+                </div><!-- /.col -->
+
+            </div>
+        </div>
+        <div class="loading-overlay">
+            <i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
+        </div>
+    </div><!-- /panel -->
+
+</div><!-- /.padding-md -->
+
+@if (ViewBag.fbmsg != null)
+{
+    <div class="alert alert-warning"><i class="fa fa-info-circle"> </i> @Html.Raw(ViewBag.fbmsg) <a href='~/SocialNetworks/' class='btn btn-sm btn-info'>Renew it now</a></div>
+}
+<div class="row padding-md">
+    <div class="panel-tab clearfix">
+        <ul class="tab-bar tab-primary">
+            <li class="active"><a href="#home" data-toggle="tab"><i class="fa fa-list-alt"></i> List</a></li>
+
+            <li><a href="#mapview" data-toggle="tab" id="gmap"><i class="fa fa-map"></i> Map</a></li>
+            <li><a href="#dfes" data-toggle="tab" id="dfestab"><i class="fa fa-bell"></i> DFES Alerts</a></li>
+        </ul>
+    </div>
+
+    <div class="tab-content">
+        <div class="tab-pane fade in active" id="home">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3>   Alerts List</h3>
+
+                </div>
+
+                <div class="panel-body">
+                    @if (TempData["Message"] != null)
+                    {
+                        <div class="alert alert-danger">
+                            <i class="glyphicon glyphicon-info-sign"></i>   @TempData["Message"]
+                        </div>
+                    }
+
+                    <div id="msg"> </div>
+                    <table class="table table-striped table-hover" id="dataTable">
+                        <thead>
+                            <tr>
+                                <th>##</th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Title)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.alertType.Name)
+                                </th>
+                                <th>Parks/Locations</th>
+                                <th>Files</th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.StartDate)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.EndDate)
+                                </th>
+                                <th>
+                                    Channels
+                                </th>
+
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Published)
+                                </th>
+                                <th>
+                                    Author/s and Dates
+                                </th>
+
+                                <th class="no-sort"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{int rowNo = 0;}
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@(rowNo += 1)</td>
+                                    <td>
+                                        <a href="#alertDetails" data-value="@item.AlertId" class="blue alertInfo" data-toggle="modal">  @Html.DisplayFor(modelItem => item.Title) </a>
+                                    </td>
+                                    <td>
+                                        <img src='@Url.Content(item.alertType.IconUrl)' width="32" alt="@item.alertType.Name" title="" data-toggle="tooltip" data-placement="left" data-original-title="@item.alertType.Name" />
+                                    </td>
+                                    <td>
+                                        <ul class="list-unstyled">
+
+                                            @foreach (var location in item.Location)
+                                            {
+                                                <li>
+                                                    <a href="#siteInfo" data-value="@location.LocId" class="blue site" role="button" data-toggle="modal">
+                                                        <i class="fa fa-map-marker blue"></i>     @Html.DisplayFor(locItem => location.Name)
+                                                    </a>
+                                                </li>
+                                            }
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        <ul class="list-unstyled">
+                                            @foreach (var file in item.Files)
+                                            {
+                                                <li>
+                                                    @if (file.FileType == "pdf")
+                                                    {
+
+                                                        <a href='@Url.Content(file.FilePath)' title="Download file" target="_blank">
+                                                            <i class="fa fa-file-pdf-o red"></i>  @Html.DisplayFor(modelItem => file.FileTitle)  (@Html.DisplayFor(modelItem => file.FileSize))
+                                                        </a>
+                                                    }
+                                                    else if (file.FileType == "docx" || file.FileType == "doc")
+                                                    {
+                                                        <a href='@Url.Content(file.FilePath)' title="Download file" target="_blank">
+                                                            <i class='fa fa-file-word-o blue'></i>   @Html.DisplayFor(modelItem => file.FileTitle)  (@Html.DisplayFor(modelItem => file.FileSize))
+                                                        </a>
+                                                    }
+                                                </li>
+                                            }
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.StartDate)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.EndDate)
+                                    </td>
+                                    <td width="100">
+                                        <div class="btn-group btn-group-xs" role="group">
+
+                                            @if (item.Facebook == "Yes")
+                                            {<a class="btn btn-xs btn-default disabled" aria-label="Facebook" title="Facebook"><i class="fa fa-facebook-official blue" aria-hidden="true"></i></a>}
+                                            @if (item.Twitter == "Yes")
+                                            {<a class="btn btn-xs btn-default disabled" title="Twitter"><i class="fa fa-twitter green" aria-hidden="true"></i></a>}
+                                            @if (item.Email == "Yes")
+                                            {<a class="btn btn-xs btn-default disabled red" aria-label="Email" title="Email"><i class="fa fa-envelope-o" aria-hidden="true"></i></a>}
+                                            @if (item.SMS == "Yes")
+                                            {<a class="btn btn-xs btn-default disabled" title="SMS"><i class="fa fa-mobile" aria-hidden="true"></i></a>}
+                                            @if (item.PushNotification == "Yes")
+                                            {<a class="btn btn-xs btn-default disabled" title="Push notification"><i class="fa fa-podcast purple" aria-hidden="true"></i></a>}
+
+                                        </div>
+                                    </td>
+
+                                    <td align="center">
+                                        @if (item.Published == "Yes")
+                                        {
+                                            <i class="fa fa-circle green" title="Published"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="fa fa-circle red" title="Not published"></i>
+                                        }
+
+                                    </td>
+                                    <td width="250">
+                                        <small class="text-muted">
+                                            <i class="fa fa-user-circle-o purple"></i>
+                                            @Html.DisplayFor(modelItem => item.CreatedBy)
+                                            <i class="fa fa-calendar-check-o green"></i>     @Html.DisplayFor(modelItem => item.CreateDate) <br />
+                                            <i class="fa fa-user-circle-o blue"></i>
+                                            @Html.DisplayFor(modelItem => item.UpdatedBy)
+                                            <i class="fa fa-calendar-check-o"></i>     @Html.DisplayFor(modelItem => item.UpdateDate)
+                                        </small>
+                                    </td>
+
+                                    <td width="100">
+
+                                        <div class="btn-group btn-group-xs" role="group">
+
+                                            @{
+                                                if (!Authorize.checkUser(item.AId))
+                                                {
+                                                    if (Authorize.canCopy(item.AlertId))
+                                                    {
+                                                        <a href="~/Alerts/Copy/@item.AlertId" title="Copy to draft" class="btn btn-default"><i class="fa fa-copy blue"></i></a>
+                                                    }
+                                                    if (Authorize.canEdit(item.AlertId))
+                                                    {
+                                                        <a href="~/Alerts/Edit/@item.AlertId" title="Edit record" class="btn btn-default"><i class="fa fa-edit green"></i></a>
+                                                    }
+                                                    if (Authorize.canDelete(item.AlertId))
+                                                    {
+
+                                                        <a href="javascript:void();" title="Delete record" class="btn btn-default delete" data-value="@item.AlertId"><i class="fa fa-trash red"></i></a>
+                                                    }
+                                                    if ((item.StartDate > DateTime.Now || item.EndDate == null) && item.Published == "Yes")
+                                                    {
+                                                        <a href="javascript:void();" class="btn btn-default unpublish" title="Unpublish record" data-value="@item.AlertId"><i class="fa fa-eye-slash purple"></i></a>
+
+                                                    }
+                                                }
+
+                                            }
+
+                                        </div>
+
+                                    </td>
+
+
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="mapview">
+
+            <br />
+
+            <div class="loadingOverlay">
+                <div class="loading-spinner">
+                    <img src="~/img/loading.png" title="Loading" />
+                    <span class="loading-text">Loading...</span>
+                </div>
+            </div>
+            <!-- This is the div that will contain the Google Map -->
+            <div id="lmap" style="width:100%; height:600px"></div>
+        </div>
+        <div class="tab-pane fade" id="dfes">
+            <div class="padding-md">
+                <div class="alert alert-info">External alerts data loaded from the www.emergency.wa.gov.au website through RSS feeds.</div>
+                <div id="dfesdata">
+                    <div id="error" class="alert alert-danger"></div>
+                </div>
+                <div class="loadingOverlay">
+                    <div class="loading-spinner">
+                        <img src="~/img/loading.png" title="Loading" /><br />
+                        <span class="loading-text">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<!--Modal-->
+<div class="modal fade" id="alertDetails">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4>Alert Details</h4>
+            </div>
+            <div class="modal-body">
+                <div id="alertContent"><center> <img src="~/img/loading.png" /> <br /> Loading ... </center></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-success" data-dismiss="modal" aria-hidden="true">Close</button>
+
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!--Modal-->
+<div class="modal fade" id="siteInfo">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4>Site Information</h4>
+            </div>
+            <div class="modal-body">
+                <div id="siteContent"><center> <img src="~/img/loading.png" /> <br /> Loading ... </center></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-success" data-dismiss="modal" aria-hidden="true">Close</button>
+
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDaJlkDXFC39cH9PQo7j3C9RmUAFkXAEQY" async defer></script>-->
+
+<!-- Mapbox GL JS -->
+<script src='https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js'></script>
+<link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css' />
+
+<!--<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet-easybutton@2.0.0/src/easy-button.css">
+<script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.fullscreen/3.0.1/Control.FullScreen.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.fullscreen/3.0.1/Control.FullScreen.min.js"></script>-->
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
+<script src="~/Scripts/app/GPX.js"></script>
+<script src='~/Scripts/Leaflet.GoogleMutant.js'></script>
+<script src="~/Scripts/leaflet.markercluster-src.js"></script>
+<link href="~/Content/MarkerCluster.css" rel="stylesheet" />
+<link href="~/Content/MarkerCluster.Default.css" rel="stylesheet" />
+
+@Scripts.Render("~/bundles/home")

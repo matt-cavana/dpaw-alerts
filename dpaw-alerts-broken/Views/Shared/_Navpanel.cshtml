@@ -1,0 +1,204 @@
+﻿<aside class="skin-6">
+    <div class="sidebar-inner scrollable-sidebars">
+        <div class="size-toggle">
+            <a class="btn btn-sm" id="sizeToggle">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+            <a class="btn btn-sm pull-right logoutConfirm_open" href="#logoutConfirm">
+                <i class="fa fa-power-off"></i>
+            </a>
+        </div><!-- /size-toggle -->
+       
+        <div class="main-menu">
+            <ul>
+                <li>
+                    <a href="~/alerts/">
+                        <span class="menu-icon">
+                            <i class="fa fa-desktop fa-lg"></i>
+                        </span>
+                        <span class="text">
+                            Home
+                        </span>
+                        <span class="menu-hover"></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="~/alerts/archived/">
+                        <span class="menu-icon">
+                            <i class="fa fa-archive fa-lg"></i>
+                        </span>
+                        <span class="text">
+                            Archived Alerts
+                        </span>
+                        <span class="menu-hover"></span>
+                    </a>
+                </li>
+                @if (User.IsInRole("Manager")||User.IsInRole("Admin"))
+                {
+
+
+                <li>
+                    <a href="~/AlertTypes">
+                        <span class="menu-icon">
+                            <i class="fa fa-warning fa-lg"></i>
+                        </span>
+                        <span class="text">
+                            Alert Types
+                        </span>
+                        <span class="menu-hover"></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="~/parks">
+                        <span class="menu-icon">
+                            <i class="fa fa-picture-o fa-lg"></i>
+                        </span>
+                        <span class="text">
+                            Parks
+                        </span>
+                        <span class="menu-hover"></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="~/Contacts">
+                        <span class="menu-icon">
+                            <i class="fa fa-envelope fa-lg"></i>
+                        </span>
+                        <span class="text">
+                           Park Contacts
+                        </span>
+                        <span class="menu-hover"></span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="~/Subscribers/">
+                        <span class="menu-icon">
+                            <i class="fa fa-group fa-lg"></i>
+                        </span>
+                        <span class="text">
+                            Subscribers
+                        </span>
+                        <span class="menu-hover"></span>
+                    </a>
+                </li>
+                }
+                @if (User.IsInRole("Admin"))
+                {
+                    <li>
+                        <a href="~/user">
+                            <span class="menu-icon">
+                                <i class="fa fa-user fa-lg"></i>
+                            </span>
+                            <span class="text">
+                                Manage Users
+                            </span>
+                            <span class="menu-hover"></span>
+                        </a>
+                    </li>
+                <li>
+                    <a href="~/Apis/">
+                        <span class="menu-icon">
+                            <i class="fa fa-feed fa-lg"></i>
+                        </span>
+                        <span class="text">
+                           System APIs
+                        </span>
+                        <span class="menu-hover"></span>
+                    </a>
+                </li>
+                <li >
+                    <a href="~/SocialNetworks/">
+                        <span class="menu-icon">
+                            <i class="fa fa-cogs fa-lg"></i>
+                        </span>
+                        <span class="text">
+                            API Integration
+                        </span>
+                        <span class="menu-hover"></span>
+                    </a>
+                   
+                </li>
+                <li>
+                    <a href="~/ScheduleJobs/">
+                        <span class="menu-icon">
+                            <i class="fa fa-calendar-check-o fa-lg"></i>
+                        </span>
+                        <span class="text">
+                          Scheduled Jobs
+                        </span>
+
+                        <span class="menu-hover"></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="~/Alerts/Jobs/">
+                        <span class="menu-icon">
+                            <i class="fa fa-fire fa-lg"></i>
+                        </span>
+                        <span class="text">
+                            Hangfire Jobs
+                        </span>
+
+                        <span class="menu-hover"></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="~/Errors/">
+                        <span class="menu-icon">
+                            <i class="fa fa-bug fa-lg"></i>
+                        </span>
+                        <span class="text">
+                            System Errors
+                        </span>
+
+                        <span class="menu-hover"></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="~/UserActivity/">
+                        <span class="menu-icon">
+                            <i class="fa fa-line-chart fa-lg"></i>
+                        </span>
+                        <span class="text">
+                           User Activities
+                        </span>
+
+                        <span class="menu-hover"></span>
+                    </a>
+                </li>
+                }
+                <li>
+                    <a class="logoutConfirm_open" href="#logoutConfirm">
+                        <span class="menu-icon">
+                            <i class="fa fa-sign-out fa-lg"></i>
+                        </span>
+                        <span class="text">
+                            Logout
+                        </span>
+
+                        <span class="menu-hover"></span>
+                    </a>
+                </li>
+                
+            </ul>
+
+            <div class="alert alert-info">
+                Welcome to Park Alerts. Do not forget to logout.
+            </div>
+        </div><!-- /main-menu -->
+    </div><!-- /sidebar-inner -->
+</aside>
+
+ <!-- Logout confirmation -->
+<div class="custom-popup width-100" id="logoutConfirm">
+    <div class="padding-md">
+        <h4 class="m-top-none"> Do you want to logout?</h4>
+    </div>
+    <div class="text-center">
+        <a class="btn btn-success m-right-sm" href="~/Account/LogOut">Logout</a>
+        <a class="btn btn-danger logoutConfirm_close">Cancel</a>
+    </div>
+</div>

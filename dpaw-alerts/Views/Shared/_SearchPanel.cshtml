@@ -1,0 +1,37 @@
+﻿<div>
+    <ul class="list-group pcl">
+        <li class="list-group-item">
+            <label class="label-checkbox inline">
+                <input type="checkbox" class="task-finish" name="crocodile" checked id="calert">
+                <span class="custom-checkbox"></span>
+            </label>
+            <strong> All alerts</strong>
+
+        </li>
+       
+        @foreach (var item in ViewBag.aType)
+        {
+        <li class="list-group-item">
+            <label class="label-checkbox inline">
+                <input type="checkbox" class="task-finish gp1" name="@item.Slug" value="@item.Slug" checked id="@item.Slug">
+                <span class="custom-checkbox"></span>
+            </label>
+            <img src='@Url.Content(item.IconUrl)' width="24" alt="@item.Name" title="@item.Name" class="hidden-xs hidden-sm" /> @item.Name
+
+        </li>
+        }
+
+
+        <li class="list-group-item">
+            <div class="form-inline">
+                <input value="Reset" type="button" id="btnReset" class="btn btn-primary btn-sm" />  <input value="Refine" type="Submit" id="btnSearch" class="btn btn-info btn-sm" />
+
+            </div>
+        </li>
+    </ul><!-- /list-group -->
+
+</div>
+
+
+
+

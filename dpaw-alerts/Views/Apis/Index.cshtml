@@ -1,0 +1,221 @@
+﻿@model IEnumerable<dpaw_alerts.Models.Api>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<div id="breadcrumb">
+    <ul class="breadcrumb">
+        <li><i class="fa fa-home"></i><a href="~/Home"> Home</a></li>
+
+        <li class="active">System APIs</li>
+    </ul>
+</div><!-- /breadcrumb-->
+<div class="main-header clearfix">
+    <div class="page-title">
+        <h3 class="no-margin">System API</h3>
+        <p>You can create API to distribute data to the different channels and organisations. You need to provide them the API generated URL to access. Remember the API has an expiry date.</p>
+    </div><!-- /page-title -->
+
+</div><!-- /main-header -->
+
+
+<div class="row padding-md">
+    <div id="msg">@ViewBag.StatusMessage </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3> @Html.ActionLink("Create API", "Create", null, new { @class = "btn btn-success" })  </h3>
+
+        </div>
+
+        <div class="panel-body">
+            @if (Model.Count() == 0)
+            {
+                <div class="alert alert-warning">No API has been created yet.</div>
+            }
+            else
+            {
+                <table class="table table-bordered table-hover">
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Description)
+                        </th>
+                        <th>
+                            Alert Type
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Token)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ExpiryDate)
+                        </th>
+                        <th>API End Point</th>
+
+                        <th>
+                            Author
+                        </th>
+                        <th></th>
+                    </tr>
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @if (item.ExpiryDate > DateTime.Now)
+                                {
+                                    <i class="fa fa-feed green"></i>
+                                }
+                                else
+                                {
+                                    <i class="fa fa-feed red"></i>
+                                }
+                                @Html.DisplayFor(modelItem => item.Description)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.alertType.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Token)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ExpiryDate)
+                            </td>
+                            <td>
+                                <i class="fa fa-globe yellow"></i> <a href='@Url.Action("AlertsApi", "api", new { id = item.Token, alert = item.alertType.Slug }, Request.Url.Scheme)' target="_blank">@Url.Action("AlertsApi", "api", new { id = item.Token, alert = item.alertType.Slug }, Request.Url.Scheme)</a>
+                            </td>
+
+                            <td>
+                                <i class="fa fa-user purple"></i>
+                                @Html.DisplayFor(modelItem => item.CreatedBy)
+                                <i class="fa fa-calendar-check-o green"></i>     @Html.DisplayFor(modelItem => item.CreateDate) <br />
+
+                            </td>
+                            <td>
+                                <div class="btn-group-xs">
+                                   
+                                    <a href="@Url.Action("Edit", new { id = item.Id })"><i class="fa fa-pencil-square-o"></i></a>
+                                    <a href="javascript:void();" data-value="@item.Id" class="delete"><i class="fa fa-trash red"></i></a>
+                                    
+                                </div>
+                            </td>
+                        </tr>
+                    }
+
+                </table>
+            }
+
+            <h3>Permanent APIs</h3>
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th>
+                       Description
+                    </th>
+                    <th>
+                        Alert Type
+                    </th>
+                    <th>
+                       Token
+                    </th>
+                    <th>
+                       Expiry
+                    </th>
+                    <th>API End Point</th>
+
+                    
+                    <th></th>
+                </tr>
+
+                    <tr>
+                        <td>
+                              <i class="fa fa-feed green"></i> Park Alerts Count
+                            <i class="fa fa-info-circle" title="" data-toggle="tooltip" data-placement="bottom" data-original-title="Replace the 'pid' with RecData parkid and 'count' parameter can be set to true or false. The API returns all alerts for the selected park when the 'count' parameter is set to false" /> 
+
+                        </td>
+                        <td>
+                           All 
+                        </td>
+                        <td>
+                            6e8981e3-7d62-4577-ae47-ab1bd72a51b3
+                        </td>
+                        <td>
+                            Never
+                        </td>
+                        <td>
+                            <i class="fa fa-globe yellow"></i> <a href='@Url.Action("AlertsApi/park", "api", new { id = "pid", token= "6e8981e3-7d62-4577-ae47-ab1bd72a51b3", count=true }, Request.Url.Scheme)' target="_blank">@Url.Action("AlertsApi/park", "api", new { id = "pid", token= "6e8981e3-7d62-4577-ae47-ab1bd72a51b3", count="true" }, Request.Url.Scheme)</a>
+                        </td>
+
+                      
+                        
+                    </tr>
+                <tr>
+                    <td>
+                        <i class="fa fa-feed green"></i> Alert Details
+                        <i class="fa fa-info-circle" title="" data-toggle="tooltip" data-placement="bottom" data-original-title="Replace the 'alertId' with alertId value e.g. adb7df48-eb03-4e24-8c8f-24220a2e39c3 and the token is a parmanent GUID token which will never expires" />
+
+                    </td>
+                    <td>
+                        All
+                    </td>
+                    <td>
+                        6e8981e3-7d62-4577-ae47-ab1bd72a51b3
+                    </td>
+                    <td>
+                        Never
+                    </td>
+                    <td>
+                        <i class="fa fa-globe yellow"></i> <a href='@Url.Action("AlertsApi/aid", "api", new { id = "alertId", token= "6e8981e3-7d62-4577-ae47-ab1bd72a51b3", count=true }, Request.Url.Scheme)' target="_blank">@Url.Action("AlertsApi/aid", "api", new { id = "alertId", token = "6e8981e3-7d62-4577-ae47-ab1bd72a51b3"}, Request.Url.Scheme)</a>
+                    </td>
+
+
+
+                </tr>
+               
+            </table>
+
+            </div>
+        </div>
+
+        </div>
+        <script>
+            $(function () {
+
+                $(".delete").click(function (e) {
+
+                    if (confirm('Are you sure want to delete?')) {
+                        e.preventDefault();
+                        var parent = $(this).parent().parent().parent();
+
+                        {
+
+                            $.ajax({
+                                url: '@Url.Action("AjaxDelete", "Apis")',
+                                type: 'POST',
+                                dataType: 'json',
+                                async: true,
+                                data: { 'id': $(this).attr('data-value') },
+                                contentType: 'application/x-www-form-urlencoded',
+                                beforeSend: function () {
+                                    parent.animate({ 'backgroundColor': '#fb6c6c' }, 300);
+                                },
+                                success: function (data) {
+                                    if (data.success) {
+
+                                        $("#msg").html("<div class='alert alert-success'>The API has been deleted from the system! </div>");
+
+                                        parent.slideUp(300, function () {
+                                            parent.remove();
+                                        });
+
+                                    }
+                                    else {
+                                        // show a message in a alert or div
+                                        $("#msg").html("<div class='alert alert-danger'>Sorry, the API cannot be deleted! </div>");
+                                    }
+                                }
+                            });
+                        }
+                    }
+                    else return false;
+                });
+            });
+        </script>

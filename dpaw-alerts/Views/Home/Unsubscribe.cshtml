@@ -1,0 +1,83 @@
+﻿@model dpaw_alerts.Models.Subscriber
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width" />
+    <title>Unsubscribe</title>
+    <link href="~/Content/unsubscribe.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="~/Scripts/jquery-2.2.4.min.js"></script>
+   
+</head>
+<body style="text-align:center">
+    <div id="subscribeform" style="line-height:26px;padding:15px;text-align:center;">
+        <div class="unsubscribeContent">
+            @if (Model != null)
+            {
+
+
+                using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="mailSubscribe">
+                        <strong> @Html.DisplayTextFor(model => model.Email)</strong><br />
+                        is subscribed to our Park Alerts mailing list.
+                    </div>
+                    if (TempData["Message"] != null)
+                    {
+                        <div class="status">
+                            @Html.Raw(TempData["Message"].ToString())
+                        </div> <br />
+                    }
+                    @Html.HiddenFor(model => model.Id)
+                    <div class="subsInnerContent">
+                        <strong class="msgTitle">Update your subscription status</strong><br />
+                        You are currently subscribed to receive the following form notification/s<br />
+                        <div class="selectReason" style="margin-top:35px;min-width:250px;">
+
+                            @Html.DropDownListFor(model => model.SubscriptionType, new SelectList(
+                  new List<Object>{
+                       new { value = "Email" , text = "Email"  },
+                       new { value = "SMS" , text = "SMS" },
+                       new { value="Email-SMS", text ="Email and SMS"},
+                       new { value="None", text="None"}
+
+                    },
+                  "value",
+                  "text",
+                 Model.SubscriptionType), new { @class = "inputType" })
+                            @Html.ValidationMessageFor(model => model.SubscriptionType, "", new { @class = "text-danger" })
+                            <br />
+
+                            <textarea style='display:none;margin-top:22px;' id="unsubscribereason" name="unsubscribereason_others" class="hideTextarea inputType" rows="4" placeholder="Provide your reason here..."></textarea>
+                            <span style='display:none' class="errorMsg">Please Enter Reason</span>
+                        </div> <br />
+                        If you no longer want to receive any email or sms notification select "None" then click on update.
+                    </div>
+                    <br /><br />
+                    <div style="text-align:center">
+                        <input class="primaryBtn" type=submit name="update" value="Update Subscription">
+                    </div>
+
+                }
+                @section Scripts {
+                    @Scripts.Render("~/bundles/jqueryval")
+                }
+            }
+            else
+            {
+                <div class="status">
+                    @Html.Raw(TempData["Message"].ToString())
+                </div> <br />
+            }
+        </div>
+    </div>
+</body>
+
+</html>

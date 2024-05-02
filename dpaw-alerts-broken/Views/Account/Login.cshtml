@@ -1,0 +1,85 @@
+﻿@using dpaw_alerts.Models
+@model LoginViewModel
+@{
+    ViewBag.Title = "Log in";
+    Layout = null;
+}
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+</head>
+<body style="background-color: #000000">
+    <div class="login-wrapper">
+        <div class="text-center">
+            <h2 class="fadeInUp animation-delay8" style="font-weight:bold">
+                <span class="text-success">Parks Alert System</span> 
+            </h2>
+        </div>
+        <div class="login-widget animation-delay1">
+            <div class="panel panel-default">
+                <div class="panel-heading clearfix">
+                    <div class="pull-left">
+                        <i class="fa fa-lock fa-lg"></i> Login
+                    </div>
+                   
+                </div>
+                <div class="panel-body">
+@using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-login", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                   
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.UserName, new { @class = "col-md-2 control-label" })
+                           
+                                @Html.TextBoxFor(m => m.UserName, new { @class = "form-control input-sm bounceIn animation-delay2", placeholder="Username" })
+                                @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
+                            
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
+                                @Html.PasswordFor(m => m.Password, new { @class = "form-control input-sm bounceIn animation-delay4", @placeholder="Password" })
+                                @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                               
+                            </div>
+                            <div class="form-group form-inline">
+
+                                <div class="input-group col-md-6">
+                                    <span class="input-group-addon">
+                                        <i class="fa fa-key"></i>
+                                    </span>
+                                    @Html.TextBoxFor(model => model.SecurityCode, new { @class = "form-control input-sm bounceIn animation-delay4", @placeholder="Enter the code" })
+
+                                </div>
+                                <div class="col-md-5 pull-right">
+                                    <img alt="" src="~/Account/captcha" />
+                                </div>
+                                @Html.ValidationMessageFor(model => model.SecurityCode, "", new { @class = "text-danger" })
+                            </div>
+
+                        <div class="seperator"></div>
+                     
+                        <hr />
+
+                        <input type="submit" class="btn btn-success btn-sm bounceIn animation-delay5 btn-block" value="Login" />
+                    
+}
+                </div>
+
+            </div><!-- /panel -->
+        </div><!-- /login-widget -->
+    </div><!-- /login-wrapper -->
+  
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+        @Scripts.Render("~/bundles/bootstrap")
+    }
+    </body>
+</html>
